@@ -4,6 +4,12 @@
   command = "npm run build"
 
 [[redirects]]
+  from = "/v1/*"
+  to = "https://khoj-api-ukh8.onrender.com/v1/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
