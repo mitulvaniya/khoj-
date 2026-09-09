@@ -19,10 +19,10 @@ const tagColor = [
 ];
 const columns = [
   {
-    title: 'Name',
+    title: 'Service Name',
     dataIndex: 'name',
     render: (text, row) => (
-      <Link className='text-blue-400' to={`${row.service_id}`}>
+      <Link className='text-orange-500 hover:text-orange-600 font-bold transition-colors' to={`${row.service_id}`}>
         {text}
       </Link>
     ),
@@ -30,9 +30,10 @@ const columns = [
   {
     title: 'Category',
     dataIndex: ['typeObj', 'name'],
+    render: (text) => <span className="font-semibold text-slate-700">{text}</span>
   },
   {
-    title: 'CIty',
+    title: 'City',
     dataIndex: ['addressObj', 'newCity', 'city'],
   },
   {
@@ -40,27 +41,30 @@ const columns = [
     dataIndex: ['addressObj', 'newState', 'state'],
   },
   {
-    title: 'Tags',
+    title: 'Tags / Specialties',
     dataIndex: 'tag',
     render: (text) =>
       text.map((prop) => {
         const num = prop.charCodeAt(0) + prop.charCodeAt(prop.length - 1);
         return (
-          <Tag style={{ color: 'black' }} color={tagColor[num % 11]}>
+          <Tag 
+            className="border-none rounded-full px-3 py-0.5 text-xs font-semibold"
+            style={{ color: '#c2410c', backgroundColor: '#ffedd5' }}
+          >
             {prop}
           </Tag>
         );
       }),
   },
   {
-    title: 'Owner name',
+    title: 'Provider Name',
     dataIndex: ['ownerObj', 'name'],
-    render: (data) => data || 'Not Specified',
+    render: (data) => <span className="text-slate-600 font-medium">{data || 'Not Specified'}</span>,
   },
   {
-    title: 'Owner number',
+    title: 'Contact Phone',
     dataIndex: ['ownerObj', 'phone'],
-    render: (data) => data || 'Not Specified',
+    render: (data) => <span className="font-mono text-slate-600">{data || 'Not Specified'}</span>,
   },
 
   {

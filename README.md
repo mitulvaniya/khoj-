@@ -1,7 +1,7 @@
 # Final Year Project
 
 ## Project Overview
-The **Home Service Provider** project refers to the facilities-based carrier or reseller with whom the customer contracts for the provision of mobile telecommunications services. Users can create an account and log in. They can use our app's chart visualisation to find the best services near them or around the world, as well as different types of categories. 
+The **Khoj** project refers to the facilities-based carrier or reseller with whom the customer contracts for the provision of mobile telecommunications services. Users can create an account and log in. They can use our app's chart visualisation to find the best services near them or around the world, as well as different types of categories. 
 
 ## [Live](https://home-service.onrender.com/) demo
 *Please note:* Website loading times may vary. While waiting, you can explore our new blog website platform [AllBlogs](https://allblogs.in).
@@ -9,7 +9,7 @@ The **Home Service Provider** project refers to the facilities-based carrier or 
 
 ### Technology Overview
 
-The Home Service Provider project employs a modern technology stack to deliver an efficient and user-friendly experience. Here's a brief overview of the key technologies and libraries used:
+The Khoj project employs a modern technology stack to deliver an efficient and user-friendly experience. Here's a brief overview of the key technologies and libraries used:
 
 - **Frontend**:
   - **React**: The frontend is built using React, a popular JavaScript library for building user interfaces. React's component-based architecture allows for better code organization and reusability.

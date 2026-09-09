@@ -1,16 +1,17 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Menu, Input, Select, Button, Dropdown } from 'antd';
+import React, { useContext, useEffect, useState } from 'react';
+import { Menu, Dropdown, Input } from 'antd';
 import {
   DotChartOutlined,
-  PieChartOutlined,
   RadarChartOutlined,
-  TeamOutlined,
-  UserOutlined,
   ProfileOutlined,
   LogoutOutlined,
   SettingOutlined,
   SearchOutlined,
-  MenuOutlined,
+  LoginOutlined,
+  UserAddOutlined,
+  CalendarOutlined,
+  ShopOutlined,
+  DashboardOutlined,
 } from '@ant-design/icons';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Avatar from 'antd/lib/avatar/avatar';
@@ -18,202 +19,405 @@ import axios from 'axios';
 import Logo from './Logo';
 import { GlobalContext } from '../Context/GlobalContext';
 import API from '../api';
-import { getArrayParams, setUrlString } from '../utils/paramsConvert';
-
-const { Option } = Select;
-
-const { SubMenu } = Menu;
+import { getauth } from '../utils/auth';
+import AIEstimatorModal from '../components/AIEstimatorModal';
+import WalletModal from '../components/WalletModal';
+import NotificationBell from '../components/NotificationBell';
+import HelpSupportModal from '../components/HelpSupportModal';
+import { CustomerServiceOutlined } from '@ant-design/icons';
 
 function Index({ children }) {
-  const [collapsed, setCollapsed] = useState(false);
-  const { data, dispatch } = useContext(GlobalContext);
+  const { dispatch, data } = useContext(GlobalContext);
   const navigate = useNavigate();
-  const { search: urlSearch, pathname } = useLocation();
-  const [isHide, setIsHide] = useState(false);
+  const { pathname } = useLocation();
+  const [navSearch, setNavSearch] = useState('');
+  const [scrolled, setScrolled] = useState(false);
 
-  const [search, setSearch] = useState({
-    name: '',
-    state: 'all',
-    city: '',
-    category: 'all',
-  });
+  const auth = getauth();
+  const isLoggedIn = data.isLoggedIn || !!auth;
 
-  const fieldOnChange = (key, value) => {
-    setSearch({ ...search, [key]: value });
-  };
-
-  const toggleCollapsed = () => {
-    setCollapsed((prevCollapsed) => !prevCollapsed);
-  };
-
-  const secondURL = pathname.split('/')[2];
+  /* Scroll detection for navbar background */
   useEffect(() => {
-    if (secondURL === 'addCategory' || secondURL === 'addService')
-      setIsHide(true);
-    else setIsHide(false);
-  }, [secondURL]);
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  /* Fetch global data once */
   useEffect(() => {
-    setSearch(getArrayParams(urlSearch));
-  }, [urlSearch]);
-  useEffect(() => {
-    axios
-      .get(API.categories)
-      .then((res) => {
-        if (res.data.success) {
-          dispatch({ type: 'SET_CATEGORIES', payload: res.data.data });
-        }
-      })
-      .catch((e) => console.error(e));
-    axios
-      .get(API.states)
-      .then((res) => {
-        if (res.data.success) {
-          dispatch({ type: 'SET_STATES', payload: res.data.data });
-        }
-      })
-      .catch((e) => console.error(e));
+    axios.get(API.categories)
+      .then(res => { if (res.data.success) dispatch({ type: 'SET_CATEGORIES', payload: res.data.data }); })
+      .catch(console.error);
+    axios.get(API.states)
+      .then(res => { if (res.data.success) dispatch({ type: 'SET_STATES', payload: res.data.data }); })
+      .catch(console.error);
   }, [dispatch]);
 
-  const menu = (
-    <Menu>
-      <Menu.Item key='1' icon={<ProfileOutlined />}>
-        <Link to='/home-services/profile'>Profile</Link>
+  const handleNavSearch = () => {
+    if (navSearch.trim()) {
+      navigate(`/khoj-services/allServices?category=all&state=all&city=&name=${navSearch.trim()}`);
+    }
+  };
+
+  /* ─── Role Resolution ──────────────── */
+  const user = data.user || {};
+  const userEmail = (user.email || localStorage.getItem('user_email') || '').toLowerCase();
+  const isAdmin = userEmail === 'admin@gmail.com';
+  const isMerchant = !!(user.isMerchant || data.isMerchant || localStorage.getItem('user_is_merchant') === 'true');
+
+  /* ─── Dropdown menus ──────────────── */
+  const categoriesMenu = (
+    <Menu className="!bg-[#fcfbfa] !border-[#e8e4d9] rounded-xl p-1.5 !shadow-xl">
+      <Menu.Item key='c1' icon={<ProfileOutlined className="text-[#c75b3a]" />} className="hover:!bg-[#f2ede4] rounded-lg !text-[#5c5650]">
+        <Link to='/khoj-services/allCategories?category=all&state=all&city=&name=' className="!text-[#5c5650] hover:!text-[#1c1917]">All Categories</Link>
       </Menu.Item>
-      <Menu.Item key='2' icon={<SettingOutlined />}>
-        <Link to='/home-services/setting'>Setting</Link>
-      </Menu.Item>
-      <Menu.Item
-        key='3'
-        icon={<LogoutOutlined />}
-        onClick={() => dispatch({ type: 'LOGOUT' })}
-      >
-        <Link to='/login'>Logout</Link>
+      {isAdmin && (
+        <Menu.Item key='c2' icon={<SettingOutlined className="text-[#b08d57]" />} className="hover:!bg-[#f2ede4] rounded-lg !text-[#5c5650]">
+          <Link to='/khoj-services/addCategory' className="!text-[#5c5650] hover:!text-[#1c1917]">Add New Category</Link>
+        </Menu.Item>
+      )}
+    </Menu>
+  );
+
+  /* Analytics Menu — ONLY shown to Admin or Merchants */
+  const chartsMenu = (
+    <Menu className="!bg-[#fcfbfa] !border-[#e8e4d9] rounded-xl p-1.5 !shadow-xl">
+      {isAdmin && (
+        <Menu.Item key='a1' icon={<RadarChartOutlined className="text-[#c75b3a]" />} className="hover:!bg-[#f2ede4] rounded-lg !text-[#5c5650]">
+          <Link to='/khoj-services/charts/categories' className="!text-[#5c5650] hover:!text-[#1c1917]">Category Demographics</Link>
+        </Menu.Item>
+      )}
+      <Menu.Item key='a2' icon={<DotChartOutlined className="text-[#b08d57]" />} className="hover:!bg-[#f2ede4] rounded-lg !text-[#5c5650]">
+        <Link to='/khoj-services/charts/services' className="!text-[#5c5650] hover:!text-[#1c1917]">
+          {isAdmin ? 'Service Analytics' : 'My Service Metrics'}
+        </Link>
       </Menu.Item>
     </Menu>
   );
 
-  return (
-    <div className='flex min-h-screen'>
-      <div
-        className={`w-64 bg-gray-900 text-white ${
-          collapsed ? 'collapsed' : ''
-        } md:overflow-y-auto`}
-      >
-        <div className='flex items-center justify-center py-4'>
-          <Logo />
+  /* User Profile Menu with Role Badging */
+  const userProfileMenu = (
+    <Menu className="!bg-[#fcfbfa] !border-[#e8e4d9] rounded-xl p-1.5 !shadow-xl min-w-[210px]">
+      {/* Role Pill Header */}
+      <div className="px-3 py-2 border-b border-[#e8e4d9]/70 mb-1">
+        <div className="text-xs font-bold text-[#1c1917] truncate">{user.name || userEmail.split('@')[0] || 'My Account'}</div>
+        <div className="text-[10px] uppercase font-bold tracking-wider mt-0.5" style={{ color: isAdmin ? '#b08d57' : isMerchant ? '#10b981' : '#c75b3a' }}>
+          {isAdmin ? '⚡ Administrator' : isMerchant ? '🛠️ Verified Merchant' : '👤 Customer Account'}
         </div>
-        <Menu
-          theme='dark'
-          defaultOpenKeys={['13', 'category', 'Services']}
-          defaultSelectedKeys={['13']}
-          mode='inline'
-          className='text-sm'
-        >
-          <SubMenu key={'1'} title='Categories' icon={<UserOutlined />}>
-            <Menu.Item key='66' icon={<UserOutlined />}>
-              <Link to='/home-services/allCategories?category=all&state=all&city=&name='>
-                All Categories
-              </Link>
-            </Menu.Item>
-            <Menu.Item key='67' icon={<UserOutlined />}>
-              <Link to='/home-services/addCategory'>Add Category</Link>
-            </Menu.Item>
-          </SubMenu>
-          <SubMenu key={'2'} title='Services' icon={<TeamOutlined />}>
-            <Menu.Item key='6' icon={<TeamOutlined />}>
-              <Link to='/home-services/allServices?category=all&state=all&city=&name='>
-                All Services
-              </Link>
-            </Menu.Item>
+      </div>
 
-            <Menu.Item key='8' icon={<TeamOutlined />}>
-              <Link to='/home-services/addService'>Add Service</Link>
-            </Menu.Item>
-          </SubMenu>
-          <SubMenu key='13' icon={<PieChartOutlined />} title='Charts'>
-            <Menu.Item key='1' icon={<RadarChartOutlined />}>
-              <Link to='/home-services/charts/categories'>
-                Categories charts
+      {/* Customer Options */}
+      {!isMerchant && (
+        <Menu.Item key='u0' icon={<CalendarOutlined className="text-[#c75b3a]" />} className="hover:!bg-[#f2ede4] rounded-lg !text-[#5c5650]">
+          <Link to='/khoj-services/myBookings' className="!text-[#5c5650] hover:!text-[#1c1917]">My Bookings</Link>
+        </Menu.Item>
+      )}
+
+      {/* Merchant Specific Options */}
+      {isMerchant && (
+        <>
+          <Menu.Item key='m1' icon={<ShopOutlined className="text-emerald-600" />} className="hover:!bg-[#f2ede4] rounded-lg !text-[#5c5650]">
+            <Link to='/khoj-services/addService' className="!text-[#5c5650] hover:!text-[#1c1917]">Add New Service</Link>
+          </Menu.Item>
+          <Menu.Item key='m2' icon={<CalendarOutlined className="text-emerald-600" />} className="hover:!bg-[#f2ede4] rounded-lg !text-[#5c5650]">
+            <Link to='/khoj-services/myBookings' className="!text-[#5c5650] hover:!text-[#1c1917]">Client Bookings</Link>
+          </Menu.Item>
+          <Menu.Item key='m3' icon={<DotChartOutlined className="text-emerald-600" />} className="hover:!bg-[#f2ede4] rounded-lg !text-[#5c5650]">
+            <Link to='/khoj-services/charts/services' className="!text-[#5c5650] hover:!text-[#1c1917]">Service Analytics</Link>
+          </Menu.Item>
+        </>
+      )}
+
+      {/* Admin Specific Options */}
+      {isAdmin && (
+        <>
+          <Menu.Item key='u4' icon={<DashboardOutlined className="text-amber-600" />} className="hover:!bg-[#f2ede4] rounded-lg !text-[#5c5650]">
+            <Link to='/khoj-services/admin' className="!text-[#5c5650] hover:!text-[#1c1917]">Admin Portal</Link>
+          </Menu.Item>
+          <Menu.Item key='u5' icon={<SettingOutlined className="text-amber-600" />} className="hover:!bg-[#f2ede4] rounded-lg !text-[#5c5650]">
+            <Link to='/khoj-services/addCategory' className="!text-[#5c5650] hover:!text-[#1c1917]">Manage Categories</Link>
+          </Menu.Item>
+          <Menu.Item key='u6' icon={<RadarChartOutlined className="text-amber-600" />} className="hover:!bg-[#f2ede4] rounded-lg !text-[#5c5650]">
+            <Link to='/khoj-services/charts/categories' className="!text-[#5c5650] hover:!text-[#1c1917]">Platform Charts</Link>
+          </Menu.Item>
+        </>
+      )}
+
+      <Menu.Divider className="!bg-[#e8e4d9]" />
+
+      <Menu.Item key='u1' icon={<ProfileOutlined className="text-[#c75b3a]" />} className="hover:!bg-[#f2ede4] rounded-lg !text-[#5c5650]">
+        <Link to='/khoj-services/profile' className="!text-[#5c5650] hover:!text-[#1c1917]">Profile</Link>
+      </Menu.Item>
+      <Menu.Item key='u2' icon={<SettingOutlined className="text-[#b08d57]" />} className="hover:!bg-[#f2ede4] rounded-lg !text-[#5c5650]">
+        <Link to='/khoj-services/setting' className="!text-[#5c5650] hover:!text-[#1c1917]">Settings</Link>
+      </Menu.Item>
+      <Menu.Item
+        key='u_help'
+        icon={<CustomerServiceOutlined className="text-emerald-600" />}
+        onClick={() => setHelpModalOpen(true)}
+        className="hover:!bg-[#f2ede4] rounded-lg !text-[#5c5650]"
+      >
+        <span className="!text-[#5c5650] hover:!text-[#1c1917]">Help & Dispute Desk</span>
+      </Menu.Item>
+
+      <Menu.Divider className="!bg-[#e8e4d9]" />
+      <Menu.Item
+        key='u3'
+        icon={<LogoutOutlined className="text-rose-500" />}
+        onClick={() => dispatch({ type: 'LOGOUT' })}
+        className="hover:!bg-rose-500/10 rounded-lg !text-[#5c5650]"
+      >
+        <Link to='/login' className="!text-[#5c5650] hover:!text-rose-600">Logout</Link>
+      </Menu.Item>
+    </Menu>
+  );
+
+  const isHome = pathname === '/khoj-services/' || pathname === '/khoj-services' || pathname === '/';
+
+  const [aiModalOpen, setAiModalOpen] = useState(false);
+  const [walletModalOpen, setWalletModalOpen] = useState(false);
+  const [helpModalOpen, setHelpModalOpen] = useState(false);
+  const walletBalance = parseInt(localStorage.getItem('khoj_wallet_balance') || '250', 10);
+
+  return (
+    <div className="min-h-screen font-sans text-[#1c1917] flex flex-col" style={{ background: '#fbf9f6' }}>
+      {/* Mounted AI Estimator Modal */}
+      <AIEstimatorModal open={aiModalOpen} onClose={() => setAiModalOpen(false)} />
+      {/* Mounted Wallet & Discounts Modal */}
+      <WalletModal open={walletModalOpen} onClose={() => setWalletModalOpen(false)} />
+      {/* Mounted Help & Dispute Resolution Modal */}
+      <HelpSupportModal open={helpModalOpen} onClose={() => setHelpModalOpen(false)} />
+
+      {/* ─── ELITE NAVBAR — Centered Layout ─────────────── */}
+      <header
+        className="sticky top-0 z-[100] px-6 py-3 border-b transition-all duration-300"
+        style={{
+          background: scrolled ? 'rgba(248, 245, 240, 0.92)' : 'rgba(248, 245, 240, 0.7)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderColor: scrolled ? 'rgba(176, 141, 87, 0.15)' : 'transparent',
+        }}
+      >
+        <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-4">
+          {/* ─── Left: Brand & Core Navigation ─── */}
+          <div className="flex items-center gap-7 flex-shrink-0">
+            <Link to="/" className="flex items-center gap-2.5 group flex-shrink-0">
+              <Logo />
+              <span
+                className="text-xl font-black tracking-tight"
+                style={{
+                  background: 'linear-gradient(135deg, #c75b3a, #b08d57)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                KHOJ
+              </span>
+            </Link>
+
+            {/* Clean Navigation Links */}
+            <nav className="hidden lg:flex items-center gap-6">
+              <Link
+                to="/khoj-services/allServices?category=all&state=all&city=&name="
+                className={`text-[13px] font-semibold transition-colors hover:text-[#c75b3a] ${
+                  pathname.includes('allServices') ? 'text-[#c75b3a] font-bold' : 'text-stone-600'
+                }`}
+              >
+                Find Services
               </Link>
-            </Menu.Item>
-            <Menu.Item key='10' icon={<DotChartOutlined />}>
-              <Link to='/home-services/charts/services'>Services charts</Link>
-            </Menu.Item>
-          </SubMenu>
-        </Menu>
-      </div>
-      <div className='flex-1 min-h-screen bg-gray-100'>
-        <header className='bg-white shadow-md p-4 flex justify-between items-center'>
-          <Button
-            icon={<MenuOutlined />}
-            className='md:hidden'
-            onClick={toggleCollapsed}
-          />
-          {!isHide && (
-            <div className='flex'>
-              <Select
-                className='mr-2'
-                value={search.category}
-                onChange={(value) => {
-                  fieldOnChange('category', value);
-                }}
+
+              {/* Categories Dropdown */}
+              <Dropdown overlay={categoriesMenu} trigger={['hover']}>
+                <span className="text-[13px] font-semibold text-stone-600 hover:text-[#c75b3a] transition-colors cursor-pointer flex items-center gap-1">
+                  Categories
+                  <svg width="8" height="5" viewBox="0 0 10 6" fill="none" className="opacity-40">
+                    <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </span>
+              </Dropdown>
+
+              {/* AI Estimator */}
+              <span
+                onClick={() => setAiModalOpen(true)}
+                className="text-[13px] font-semibold text-stone-600 hover:text-[#c75b3a] transition-colors cursor-pointer flex items-center gap-1.5"
               >
-                <Option value='all'>Category (All)</Option>
-                {data.categories.length > 0 &&
-                  data.categories.map((category) => (
-                    <Option key={category.id} value={category.id}>
-                      {category.name}
-                    </Option>
-                  ))}
-              </Select>
-              <Select
-                className='mr-2'
-                value={search.state}
-                onChange={(value) => fieldOnChange('state', value)}
-              >
-                <Option value='all'>State (All)</Option>
-                {data.states.length > 0 &&
-                  data.states.map((state) => (
-                    <Option key={state.id} value={state.id}>
-                      {state.state}
-                    </Option>
-                  ))}
-              </Select>
-              <Input
-                className='mr-2'
-                value={search.city}
-                onChange={(value) => fieldOnChange('city', value.target.value)}
-                placeholder='Enter your location'
-              />
-              <Input
-                className='mr-2'
-                placeholder={'ex "shree ram"'}
-                value={search.name}
-                onChange={(value) => {
-                  fieldOnChange('name', value.target.value);
-                }}
-              />
-              <Button
-                className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2  rounded flex items-center'
-                icon={<SearchOutlined />}
+                🤖 AI Estimator
+              </span>
+
+              {/* Home Diagnostics */}
+              <Link
+                to="/#home-diagnostics"
                 onClick={() => {
-                  navigate(`/home-services/allServices${setUrlString(search)}`);
-                  dispatch({ type: 'SET_SEARCH_PARAMS', payload: search });
+                  const el = document.getElementById('home-diagnostics');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
+                className="text-[13px] font-semibold text-stone-600 hover:text-[#c75b3a] transition-colors cursor-pointer"
               >
-                Search
-              </Button>
-            </div>
-          )}
-          <Dropdown overlay={menu}>
-            <Avatar size='large' src='../images/team_01.jpg' />
-          </Dropdown>
-        </header>
-        <main className='p-4'>{children}</main>
-        <footer className='text-center bg-white py-4'>
-          Bhavya Design ©{new Date().getFullYear()} Created by bhavyabhut
-        </footer>
-      </div>
+                Issue Doctor
+              </Link>
+
+              {/* Role-Based Analytics (Admin / Merchant only) */}
+              {(isAdmin || isMerchant) && (
+                <Dropdown overlay={chartsMenu} trigger={['hover']}>
+                  <span className="text-[13px] font-semibold text-stone-600 hover:text-[#c75b3a] transition-colors cursor-pointer flex items-center gap-1">
+                    {isAdmin ? '📊 Analytics' : '📊 Performance'}
+                    <svg width="8" height="5" viewBox="0 0 10 6" fill="none" className="opacity-40">
+                      <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </span>
+                </Dropdown>
+              )}
+            </nav>
+          </div>
+
+          {/* ─── Center: Prominent Search Bar ─── */}
+          <div className="hidden md:flex flex-1 max-w-sm mx-4">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleNavSearch();
+              }}
+              className="w-full"
+            >
+              <Input
+                placeholder="Search services (e.g. AC Repair, Cleaning)..."
+                value={navSearch}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setNavSearch(val);
+                  if (pathname.includes('allServices')) {
+                    navigate(`/khoj-services/allServices?category=all&state=all&city=&name=${val.trim()}`, { replace: true });
+                  }
+                }}
+                onPressEnter={handleNavSearch}
+                prefix={
+                  <SearchOutlined
+                    onClick={handleNavSearch}
+                    className="cursor-pointer text-stone-400 hover:text-[#c75b3a] transition-colors mr-1"
+                    style={{ fontSize: 13 }}
+                  />
+                }
+                className="!rounded-full !bg-[#f2efe8]/90 !border-[#e8e4d9] !text-xs !py-1.5 !px-3.5 placeholder:!text-stone-400 hover:!border-[#c75b3a]/40 focus:!border-[#c75b3a] !transition-all shadow-xs"
+              />
+            </form>
+          </div>
+
+          {/* ─── Right: Actions, Utilities & Profile ─── */}
+          <div className="flex items-center gap-3 flex-shrink-0">
+            {/* Merchant Quick Action */}
+            {isMerchant && (
+              <Link
+                to="/khoj-services/addService"
+                className="hidden sm:flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 px-3 py-1.5 rounded-full transition-all shadow-xs"
+              >
+                ➕ List Service
+              </Link>
+            )}
+
+            {/* Admin Quick Action */}
+            {isAdmin && (
+              <Link
+                to="/khoj-services/admin"
+                className="hidden sm:flex items-center gap-1 text-xs font-bold text-amber-800 bg-amber-100 hover:bg-amber-200 border border-amber-300 px-3 py-1.5 rounded-full transition-all shadow-xs"
+              >
+                ⚡ Admin
+              </Link>
+            )}
+
+            {/* Customer Bookings Quick Link */}
+            {isLoggedIn && !isMerchant && !isAdmin && (
+              <Link
+                to="/khoj-services/myBookings"
+                className="text-xs font-bold text-stone-700 hover:text-[#c75b3a] px-2 py-1 transition-colors hidden sm:flex items-center gap-1.5"
+              >
+                <CalendarOutlined /> Bookings
+              </Link>
+            )}
+
+            {/* Customer Wallet Quick Pill */}
+            {!isMerchant && (
+              <button
+                type="button"
+                onClick={() => setWalletModalOpen(true)}
+                className="text-xs font-bold text-amber-900 bg-amber-100/90 hover:bg-amber-200/80 border border-amber-300/80 px-2.5 py-1 rounded-full transition-all cursor-pointer flex items-center gap-1 shadow-xs"
+                title="Khoj Digital Wallet"
+              >
+                🪙 ₹{walletBalance}
+              </button>
+            )}
+
+            {/* Real-Time Live Notification Center */}
+            <NotificationBell />
+
+            {/* Quick Help Desk Trigger */}
+            <button
+              type="button"
+              onClick={() => setHelpModalOpen(true)}
+              className="hidden xl:flex items-center gap-1 text-xs font-semibold text-stone-600 hover:text-[#c75b3a] px-2 py-1 bg-transparent border-none cursor-pointer transition-colors"
+              title="24x7 Help Desk & Safety SOS"
+            >
+              <CustomerServiceOutlined className="text-[#c75b3a]" />
+              <span>Help</span>
+            </button>
+
+            {/* User Profile Dropdown or Login/Register */}
+            {isLoggedIn ? (
+              <Dropdown overlay={userProfileMenu} trigger={['click']}>
+                <div className="flex items-center gap-2 cursor-pointer group px-2.5 py-1.5 rounded-full transition-all hover:bg-[#f2ede4] border border-stone-300/60 bg-white/70 shadow-xs">
+                  <Avatar size={24} src='../images/team_01.jpg' className="!border !border-[#c75b3a]/30" />
+                  <span className="hidden sm:inline text-xs font-bold text-stone-700 group-hover:text-stone-900 transition-colors">
+                    {user.name || userEmail.split('@')[0] || 'Account'}
+                  </span>
+                  <svg width="8" height="5" viewBox="0 0 10 6" fill="none" className="opacity-40">
+                    <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              </Dropdown>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="hidden sm:flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-full transition-all hover:bg-[#f2ede4] border border-stone-200 text-stone-700"
+                >
+                  <LoginOutlined style={{ fontSize: 11 }} />
+                  Login
+                </Link>
+                <Link
+                  to="/registration"
+                  className="flex items-center gap-1.5 text-xs font-bold px-4 py-1.5 rounded-full transition-all hover:opacity-90 text-white shadow-xs"
+                  style={{ background: 'linear-gradient(135deg, #c75b3a, #b08d57)' }}
+                >
+                  <UserAddOutlined style={{ fontSize: 11 }} />
+                  Sign Up
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* ─── Main Content ───────────────────────────── */}
+      {isHome ? (
+        <main className="flex-1">{children}</main>
+      ) : (
+        <main className="flex-1 w-full max-w-7xl mx-auto px-6 py-10">{children}</main>
+      )}
+
+      {/* ─── Footer ─────────────────────────────────── */}
+      <footer className="text-center py-8 border-t text-sm space-y-2" style={{ background: '#f2efe8', borderColor: 'rgba(176, 141, 87, 0.12)', color: '#8c7866' }}>
+        <div className="flex flex-wrap justify-center items-center gap-3 text-xs font-semibold text-stone-600">
+          <Link to="/" className="hover:text-[#c75b3a] transition-colors">Home</Link>
+          <span>•</span>
+          <Link to="/khoj-services/allCategories?category=all&state=all&city=&name=" className="hover:text-[#c75b3a] transition-colors">Categories</Link>
+          <span>•</span>
+          <Link to="/khoj-services/allServices?category=all&state=all&city=&name=" className="hover:text-[#c75b3a] transition-colors">All Services</Link>
+          <span>•</span>
+          <button type="button" onClick={() => setHelpModalOpen(true)} className="hover:text-[#c75b3a] bg-transparent border-none cursor-pointer p-0 font-semibold text-xs text-stone-600 transition-colors">
+            24x7 Help Desk & Safety SOS
+          </button>
+        </div>
+        <p className="font-medium text-xs">Khoj &copy; {new Date().getFullYear()} — Hyperlocal Home Service Discovery Platform (B.Tech Major Project)</p>
+      </footer>
     </div>
   );
 }

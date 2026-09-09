@@ -56,7 +56,7 @@ function ChangePassword() {
             right: '1rem',
           }}
         >
-          <Logo /> <h1 className='title'>HomeServices</h1>
+          <Logo /> <h1 className='title'>Khoj</h1>
         </div>
         <h2 className='welcomeBack'>Welcome back</h2>
         <p className='loginIntoAccount'>Enter new password for </p>

@@ -6,40 +6,40 @@ function MainDetails({ data }) {
   return (
     <>
       {data && (
-        <Card title='Main Details' className='rounded-lg shadow-md'>
-          <div className='grid grid-cols-2 gap-x-4 gap-y-2'>
-            <div className='flex items-center'>
-              <div className='text-gray-600 mr-2'>Name:</div>
-              <div>{data.name}</div>
+        <div className="bg-slate-50 rounded-2xl border border-slate-200/50 p-6 sm:p-8">
+          <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-teal-500"></span>
+            Profile Details
+          </h3>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+            <div className='flex flex-col border-b border-slate-100 pb-3'>
+              <span className='text-xs text-slate-400 font-semibold uppercase tracking-wider mb-1'>Service Title</span>
+              <span className="text-slate-700 font-medium">{data.name}</span>
             </div>
-            <div className='flex items-center'>
-              <div className='text-gray-600 mr-2'>Description:</div>
-              <div>{data.description}</div>
+            <div className='flex flex-col border-b border-slate-100 pb-3'>
+              <span className='text-xs text-slate-400 font-semibold uppercase tracking-wider mb-1'>Category</span>
+              <span className="text-slate-700 font-medium">{data.typeObj?.name}</span>
             </div>
-            <div className='flex items-center'>
-              <div className='text-gray-600 mr-2'>Category/Type:</div>
-              <div>{data.typeObj?.name}</div>
+            <div className='flex flex-col border-b border-slate-100 pb-3 md:col-span-2'>
+              <span className='text-xs text-slate-400 font-semibold uppercase tracking-wider mb-1'>Service Description</span>
+              <span className="text-slate-600 leading-relaxed text-sm">{data.description || 'No description provided.'}</span>
             </div>
-            <div className='flex items-center'>
-              <div className='text-gray-600 mr-2'>Tags:</div>
-              <div>
-                {data?.tag?.map((prop) => {
-                  const num =
-                    prop.charCodeAt(0) + prop.charCodeAt(prop.length - 1);
-                  return (
-                    <Tag style={{ color: 'black' }} color={tagColor[num % 11]}>
-                      {prop}
-                    </Tag>
-                  );
-                })}
+            <div className='flex flex-col border-b border-slate-100 pb-3 md:col-span-2'>
+              <span className='text-xs text-slate-400 font-semibold uppercase tracking-wider mb-2'>Specialized Tags</span>
+              <div className="flex flex-wrap gap-2">
+                {data?.tag?.map((prop) => (
+                  <Tag 
+                    key={prop} 
+                    className="border-none rounded-full px-3 py-0.5 text-xs font-semibold"
+                    style={{ color: '#0f766e', backgroundColor: '#ccfbf1' }}
+                  >
+                    {prop}
+                  </Tag>
+                ))}
               </div>
             </div>
-            <div className='flex items-center'>
-              <div className='text-gray-600 mr-2'>Experience:</div>
-              <div>{data.experience}</div>
-            </div>
           </div>
-        </Card>
+        </div>
       )}
     </>
   );

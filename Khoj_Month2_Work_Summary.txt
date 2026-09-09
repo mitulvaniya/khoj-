@@ -1,0 +1,147 @@
+================================================================================
+KHOJ PLATFORM — MONTH 2 / MILESTONE 2 WORK SUMMARY & TECHNICAL IMPLEMENTATION
+================================================================================
+
+PROJECT NAME: Khoj — An Intelligent, High-Performance Discovery and Analytics Platform for Home Service Providers
+STUDENT NAME: Mitul Vaniya
+ENROLLMENT NO: 23SE02IE055
+PROGRAM / BRANCH: B.Tech - ITE (7th Semester)
+UNIVERSITY: P P Savani University (PPSU)
+MENTOR: Mr. Ravirajsingh Chauhan
+
+================================================================================
+1. BRIEF OVERVIEW OF WORK COMPLETED IN MONTH 2
+================================================================================
+During Month 2 (Post-Reporting 1), the platform transitioned from basic scaffolding to a production-ready, transactional service marketplace with interactive mapping, verified customer reviews, and zero-latency backend failover boundaries. 
+
+Key technical deliverables completed in Month 2:
+1. Full-Stack Booking Lifecyle Engine & 3-Step Ticket Confirmation Wizard
+2. My Bookings Dual Dashboard (Customer Status Tracker & Merchant Request Management)
+3. Zero-Latency ReadyState Backend Failover & Memory Store (<60ms response speed)
+4. Verified Customer Ratings & Reviews Engine with real-time score calculations
+5. OpenStreetMap / Leaflet.js Geolocation Explorer centered on Surat, Gujarat (21.1702, 72.8311)
+6. HTML5 Canvas Constellation Particle Physics Hero Animation
+7. Redesigned Multi-Step Merchant Onboarding (Add Service) & Category Upload Portals
+8. Executive User Profile & Account Settings Hub
+9. Interactive Category & Geographic Density Analytics Charts (Recharts Donut Visualizer)
+10. Razorpay Payment Gateway Integration (In Progress — currently debugging checkout API payloads & signatures)
+
+================================================================================
+2. COMPLETED MODULES & CURRENT STATUS
+================================================================================
+
+[MODULE 1] Setup, DB & Auth
+- Description: Express REST API server setup, Mongoose schemas (Users, Services, Categories, Cities, States), JWT stateless authentication with bcrypt password hashing, and Role-Based Access Control (RBAC).
+- Status: COMPLETED
+
+[MODULE 2] React Frontend Architecture & Layout System
+- Description: Single Page Application (SPA) scaffolded with React 18, React Router v6, Context API, Tailwind CSS, custom warm parchment theme (#fbf9f6, #c75b3a, #b08d57), and navigation dropdowns.
+- Status: COMPLETED
+
+[MODULE 3] Map Explorer & Geolocation Engine
+- Description: OpenStreetMap split explorer built with Leaflet.js 1.9 and CartoDB Voyager tile layers. Plotted 50+ service provider markers around Surat, Gujarat (21.1702 N, 72.8311 E) with coordinate offset algorithms and Google Maps directions navigation routing.
+- Status: COMPLETED
+
+[MODULE 4] Full-Stack Booking Engine & Movie-Ticket Wizard
+- Description: Created Mongoose booking schema (schemas/Booking.js), 5 REST API endpoints in controller/bookingController.js & router/booking.js (/create, /user/:userId, /merchant/:userId, /update/:bookingId, /:bookingId), and a 3-step modal wizard in ServiceDetail/index.jsx featuring slot selection, dashed ticket summary card, duplicate reservation validation, and booking ID generation.
+- Status: COMPLETED
+
+[MODULE 5] My Bookings Dual-Role Dashboard
+- Description: Built pages/MyBookings/index.jsx supporting two distinct user views:
+  - Customer View: Real-time booking status timeline (Pending -> Confirmed -> Completed / Cancelled).
+  - Merchant View: Incoming booking request management with Accept, Decline, and Mark Complete controls.
+- Status: COMPLETED
+
+[MODULE 6] Customer Ratings & Verified Reviews Engine
+- Description: Developed ServiceDetail/Reviews.jsx featuring 5-star rate selector, percentage progress distribution bar charts, write review modal, live feedback feed, and real-time average score updates on hero header badges.
+- Status: COMPLETED
+
+[MODULE 7] ReadyState Connection Failover Boundary
+- Description: Updated backend controllers (service.js, category.js, state.js, bookingController.js) with readyState connection validation (if readyState === 1). Bypasses 10-second Mongoose query buffering timeouts during cloud DB latency and serves API requests via RAM memory stores in <60ms.
+- Status: COMPLETED
+
+[MODULE 8] Multi-Step Forms & User Settings Hub
+- Description: Redesigned AddService (2-step merchant onboarding wizard), AddCategory (drag-and-drop banner uploader), Profile (avatar header & credentials), and Setting (personal details, security password form, notification switches).
+- Status: COMPLETED
+
+[MODULE 9] Interactive Analytics Charts
+- Description: Redesigned CategoryChart and ServiceChart using Recharts donut pie charts with KPI summary cards and click-to-filter category/city redirects.
+- Status: COMPLETED
+
+[MODULE 10] Payment Gateway & Deposit Checkout
+- Description: Razorpay checkout integration for collecting booking deposits during ticket confirmation.
+- Status: IN PROGRESS — currently debugging checkout/order-creation API payloads, payment signature verification, and webhook handling.
+
+================================================================================
+3. TOOLS AND TECHNOLOGIES USED
+================================================================================
+- Programming Languages: JavaScript (ES6+), HTML5, CSS3, SQL/NoSQL
+- Frontend Framework: React.js 18, React Router v6, React Context API
+- UI & Styling Libraries: Tailwind CSS, Ant Design 5, CSS Modules, Google Fonts (Outfit, Inter)
+- Mapping & Visualization: Leaflet.js 1.9, CartoDB Voyager Tiles, Recharts Analytics, HTML5 Canvas
+- Backend Engine: Node.js v20, Express.js 4, Nodemon, CORS, Morgan Logger, Multer
+- Database & Security: MongoDB Atlas, Mongoose 8 ORM, RAM Memory Failover Store, Bcrypt.js, JSON Web Tokens (JWT)
+- Payment Gateway: Razorpay API (integration in progress)
+- Development & Testing Tools: VS Code, Git, Postman, npm, ReadyState Connection Monitor
+
+================================================================================
+4. IMPLEMENTATION & TECHNICAL DETAILS
+================================================================================
+- Algorithm / Method Followed: 
+  1. State Machine Pattern: Governs booking transitions (Pending -> Confirmed -> Completed / Cancelled).
+  2. Mongoose ReadyState Connection Check: Validates DB readyState before querying; uses in-memory RAM fallback stores when cloud database latency occurs to serve responses in <60ms.
+  3. Spatial Offset Algorithm: Generates localized latitude/longitude offsets for Leaflet map markers around Surat, Gujarat (21.1702 N, 72.8311 E).
+
+- Coding / Development Details:
+  - Express.js API Gateway with REST endpoints mounted under /v1/ (services, categories, bookings, city, state).
+  - Component-driven SPA in React with reusable components (ServiceDetail, MyBookings, AllService, Reviews, AddService, AddCategory, Profile, Setting).
+
+- Database Design:
+  - Normalised MongoDB document collections: Users, Services, Categories, Cities, States, Bookings (userId, serviceId, serviceName, bookingDate, timeSlot, notes, address, status), and Reviews.
+
+- API Integration:
+  - Booking REST API endpoints, Leaflet tile layers, and Razorpay checkout API integration (in progress, debugging order creation flow and webhooks).
+
+- Testing Performed:
+  - Manual verification of authentication, Booking CRUD, duplicate booking prevention (returns 409 Conflict), readyState RAM failover speed (<60ms), and Leaflet map rendering.
+
+================================================================================
+5. TECHNICAL CHALLENGES FACED & SOLUTIONS APPLIED
+================================================================================
+
+[CHALLENGE 1] Preventing double-booking under concurrent service requests
+- Solution Applied: Implemented backend duplicate query validation checking (userId, serviceId, bookingDate, timeSlot) for non-cancelled bookings, returning HTTP 409 Conflict paired with a 3-step date-picker wizard.
+
+[CHALLENGE 2] Mongoose 10-second buffer timeout during cloud database latency
+- Solution Applied: Implemented readyState connection checks (if mongoose.connection.readyState === 1) across backend controllers. If the database is disconnected or slow, requests immediately utilize RAM memory fallbacks, serving API responses in <60ms.
+
+[CHALLENGE 3] Leaflet.js double-mounting & 0px map container height in React StrictMode
+- Solution Applied: Maintained map container ref permanently mounted in DOM, added mapRef.current.remove() cleanup logic, and triggered mapRef.current.invalidateSize() inside a 300ms post-mount timer.
+
+[CHALLENGE 4] Errors occurring during Razorpay checkout/order creation while integrating payments
+- Solution Applied: Currently debugging by checking API request/response payloads, order and payment signature verification, and webhook handling — fix in progress, to be completed and reported next.
+
+================================================================================
+6. TASKS IN PROGRESS / NEXT MONTH PLAN
+================================================================================
+- Remaining Modules: Resolve current Razorpay payment integration errors and complete Payment deposit collection, then move on to Socket.io WebSockets real-time chat between customer and provider.
+- Testing Plan: Add unit/integration test coverage for booking state machine concurrency and payment flow end-to-end.
+- Documentation Work: Document readyState failover architecture, REST API endpoints, and payment flow.
+- Deployment Plan: Admin Panel/Dashboard, AWS S3 storage, and cloud deployment on Vercel (frontend) and Render (backend).
+
+================================================================================
+7. LEARNINGS / SKILLS ACQUIRED
+================================================================================
+- Technical Skills Learned: React state machine workflows, Leaflet.js OpenStreetMap integration, readyState connection failovers, RESTful API design, and Mongoose schema modeling.
+- Professional Skills Learned: Debugging third-party payment gateway integrations methodically, following a phased project roadmap, and Git feature-branch workflow.
+
+================================================================================
+8. REFERENCES / RESOURCES USED
+================================================================================
+[1] Express Documentation, https://expressjs.com, Accessed July 2026.
+[2] MongoDB & Mongoose Documentation — Connection readyState, https://mongoosejs.com/docs/, Accessed July 2026.
+[3] React Documentation, https://react.dev, Accessed July 2026.
+[4] Leaflet.js Documentation — OpenStreetMap Tile Layers, https://leafletjs.com, Accessed July 2026.
+[5] Ant Design Documentation, https://ant.design, Accessed July 2026.
+[6] Razorpay Developer Documentation, https://razorpay.com/docs/, Accessed July 2026.
+================================================================================

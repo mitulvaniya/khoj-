@@ -28,6 +28,17 @@ const routes = {
   categoryImage: 'categoryImages/:id',
   addService: 'services/addService',
   getAllCity: 'city',
+  createBooking: 'bookings/create',
+  getUserBookings: 'bookings/user/:userId',
+  getMerchantBookings: 'bookings/merchant/:userId',
+  updateBookingStatus: 'bookings/update/:bookingId',
+  verifyBookingPin: 'bookings/verify-pin/:bookingId',
+  reviewBooking: 'bookings/review/:bookingId',
+  getBookingById: 'bookings/:bookingId',
+  createPaymentOrder: 'payments/create-order',
+  verifyPayment: 'payments/verify',
+  getChatMessages: 'chat/:bookingId',
+  sendChatMessage: 'chat/send',
 };
 
 const API = {};

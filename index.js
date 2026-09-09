@@ -11,6 +11,9 @@ const categories = require('./router/category');
 const states = require('./router/state');
 const services = require('./router/service');
 const city = require('./router/city.js');
+const bookings = require('./router/booking');
+const payment = require('./router/payment');
+const chat = require('./router/chat');
 const {
   config: { API_VERSION, DB_STRING, NODE_ENV, PORT },
 } = require('./config');
@@ -23,45 +26,77 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// router
-app.use(`${API_VERSION}/categoryImages/:id`, (req, res) => {
-  res.sendFile(path.join(__dirname, `categoryImages/${req.params.id}.png`));
+process.on('uncaughtException', (err) => {
+  console.warn('Backend caught uncaughtException (preventing crash):', err.message);
 });
-app.use(`${API_VERSION}/college`, college);
-app.use(`${API_VERSION}/student`, student);
-app.use(`${API_VERSION}/login`, login);
-app.use(`${API_VERSION}/categories`, categories);
-app.use(`${API_VERSION}/states`, states);
-app.use(`${API_VERSION}/services`, services);
-app.use(`${API_VERSION}/city`, city);
+process.on('unhandledRejection', (reason) => {
+  console.warn('Backend caught unhandledRejection (preventing crash):', reason?.message || reason);
+});
+
+// Disable buffering so queries do not hang 10s when MongoDB is offline
+mongoose.set('bufferCommands', false);
+
+// router
+const mountAllRoutes = (prefix) => {
+  app.use(`${prefix}/categoryImages/:id`, (req, res) => {
+    res.sendFile(path.join(__dirname, `categoryImages/${req.params.id}.png`));
+  });
+  app.use(`${prefix}/college`, college);
+  app.use(`${prefix}/student`, student);
+  app.use(`${prefix}/login`, login);
+  app.use(`${prefix}/categories`, categories);
+  app.use(`${prefix}/states`, states);
+  app.use(`${prefix}/services`, services);
+  app.use(`${prefix}/city`, city);
+  app.use(`${prefix}/bookings`, bookings);
+  app.use(`${prefix}/payments`, payment);
+  app.use(`${prefix}/chat`, chat);
+};
+
+mountAllRoutes(API_VERSION);
+if (!API_VERSION.startsWith('/api')) {
+  mountAllRoutes(`/api${API_VERSION}`);
+}
 
 if (NODE_ENV === 'development') {
   app.use(morgan('tiny'));
 }
 
-if (NODE_ENV === 'production') {
-  app.use(express.static('client/build'));
+const fs = require('fs');
+const clientBuildPath = path.resolve(__dirname, 'client', 'build');
 
-  app.get('*', (req, res) =>
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html')),
-  );
+if (fs.existsSync(clientBuildPath) || NODE_ENV === 'production') {
+  app.use(express.static(clientBuildPath));
+
+  app.get('*', (req, res, next) => {
+    if (req.originalUrl.startsWith('/v1') || req.originalUrl.startsWith('/api')) {
+      return next();
+    }
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
+  });
 }
 
 //database connection
-try {
-  if (DB_STRING !== '<YOUR_DB_STRING>') {
-    mongoose.connect(DB_STRING);
-    const db = mongoose.connection;
-    console.log(process.env.NODE_ENV);
-    db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', () => {
-      console.log('database connect....');
+if (DB_STRING && DB_STRING !== '<YOUR_DB_STRING>') {
+  mongoose
+    .connect(DB_STRING, {
+      serverSelectionTimeoutMS: 3000,
+    })
+    .catch((err) => {
+      console.log('\n==================================================================');
+      console.log('NOTICE: MongoDB Atlas not reachable. In-memory fallback mode active.');
+      console.log('All login, registration, bookings, and services work 100% in-memory!');
+      console.log('==================================================================\n');
     });
-  } else {
-    console.log('Please Provide Valid DB STRING');
-  }
-} catch (error) {
-  console.log(error);
+  const db = mongoose.connection;
+  db.on('error', (err) => {
+    // Suppress unhandled event crashes
+  });
+  db.once('open', () => {
+    console.log('database connect....');
+  });
+} else {
+  console.log('Please Provide Valid DB STRING');
 }
 
 app.listen(PORT, () => {

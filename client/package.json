@@ -1,5 +1,5 @@
 {
-  "name": "home-service-provider-client",
+  "name": "khoj-client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -17,6 +17,7 @@
     "axios": "^1.6.8",
     "babel-eslint": "^10.1.0",
     "eslint-config-airbnb": "^19.0.4",
+    "leaflet": "^1.9.4",
     "react": "^18.3.1",
     "react-custom-scrollbars-2": "^4.5.0",
     "react-dom": "^18.3.1",

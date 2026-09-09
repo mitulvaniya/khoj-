@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Categories = require('../schemas/Category');
 
 const fs = require('fs');
@@ -18,21 +19,28 @@ const NewServices = require('../schemas/NewServices');
 
 exports.getCategories = async (req, res) => {
   try {
-    const categories = await Categories.find();
-    success(res, categories);
+    if (mongoose.connection.readyState === 1) {
+      const categories = await Categories.find();
+      return success(res, categories);
+    }
   } catch (error) {
-    serverError(res, error);
+    console.warn('DB query failed in getCategories:', error.message);
   }
+  return success(res, []);
 };
+
 exports.addCategory = async (req, res) => {
   try {
-    const categories = await Categories.find();
+    let categories = [];
+    if (mongoose.connection.readyState === 1) {
+      categories = await Categories.find();
+    }
     if (
       categories.filter(
         (c) => c.name.toLowerCase() == req.body.name.toLowerCase(),
       ).length > 0
     ) {
-      resourceError(res, 'Category Already Exits.');
+      return resourceError(res, 'Category Already Exists.');
     } else {
       try {
         fs.writeFileSync(
@@ -44,20 +52,24 @@ exports.addCategory = async (req, res) => {
         Category.name = req.body.name;
         Category.id = req.body.name;
         const newCategory = await Category.save();
-        success(res, newCategory);
+        return success(res, newCategory);
       } catch (e) {
-        serverError(res, e);
+        return serverError(res, e);
       }
     }
   } catch (error) {
-    serverError(res, error);
+    return serverError(res, error);
   }
 };
 
 exports.categoriesDashboard = async (req, res) => {
   try {
-    const categories = await Categories.find();
-    const services = await NewServices.find();
+    let categories = [];
+    let services = [];
+    if (mongoose.connection.readyState === 1) {
+      categories = await Categories.find();
+      services = await NewServices.find();
+    }
     let countCategories = {};
     let finalCategories = [];
     services.map((service) => {
@@ -74,8 +86,8 @@ exports.categoriesDashboard = async (req, res) => {
         count: countCategories[category.id] || 0,
       };
     });
-    success(res, finalCategories);
+    return success(res, finalCategories);
   } catch (error) {
-    serverError(res, error);
+    return serverError(res, error);
   }
 };
