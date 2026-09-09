@@ -65,14 +65,31 @@ if (NODE_ENV === 'development') {
 const fs = require('fs');
 const clientBuildPath = path.resolve(__dirname, 'client', 'build');
 
-if (fs.existsSync(clientBuildPath) || NODE_ENV === 'production') {
+const indexHtmlPath = path.join(clientBuildPath, 'index.html');
+
+if (fs.existsSync(indexHtmlPath)) {
   app.use(express.static(clientBuildPath));
 
   app.get('*', (req, res, next) => {
     if (req.originalUrl.startsWith('/v1') || req.originalUrl.startsWith('/api')) {
       return next();
     }
-    res.sendFile(path.join(clientBuildPath, 'index.html'));
+    res.sendFile(indexHtmlPath);
+  });
+} else {
+  // Pure API mode (when frontend is deployed on Netlify)
+  app.get('/', (req, res) => {
+    res.json({
+      message: 'Khoj Hyperlocal Services API is running!',
+      status: 'healthy',
+      version: 'v1',
+      database: mongoose.connection.readyState === 1 ? 'connected' : 'connecting',
+      endpoints: {
+        categories: '/v1/categories',
+        services: '/v1/services/all',
+        bookings: '/v1/bookings/my-bookings',
+      },
+    });
   });
 }
 
