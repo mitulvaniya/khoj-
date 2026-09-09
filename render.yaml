@@ -1,27 +1,18 @@
 services:
 - type: web
-  name: khoj
+  name: khoj-api
   runtime: node
-  repo: https://github.com/bhavyabhut/khoj
   plan: free
-  envVars:
-  - key: GMAIL_PASSWORD
-    sync: false
-  - key: GMAIL
-    sync: false
-  - key: SECREATE
-    sync: false
-  - key: PORT
-    sync: false
-  - key: NODE_ENV
-    sync: false
-  - key: DB_STRING
-    sync: false
-  - key: API_VERSION
-    sync: false
-  region: oregon
-  buildCommand: npm install && npm install --prefix client && npm run build --prefix
-    client
+  region: singapore
+  buildCommand: npm install
   startCommand: node index.js
-  autoDeploy: true
+  envVars:
+  - key: NODE_ENV
+    value: production
+  - key: API_VERSION
+    value: /v1
+  - key: DB_STRING
+    value: mongodb+srv://khojuser:khojpassword123@cluster0.rygshv0.mongodb.net/khoj?retryWrites=true&w=majority&appName=Cluster0
+  - key: SECREATE
+    value: demosecretkeyforcollegesubmission123
 version: "1"
