@@ -413,21 +413,22 @@ export default function CartDrawer({
 
         {/* Sticky Footer Checkout Button */}
         {cartItems.length > 0 && (
-          <div className="p-4 bg-white border-t border-[#e8e4d9] shadow-lg">
+          <div className="sticky bottom-0 left-0 right-0 p-4 bg-white border-t border-[#e8e4d9] shadow-2xl z-10">
             <button
               onClick={handleCheckout}
-              className="w-full h-12 rounded-xl font-bold text-sm text-white bg-[#c75b3a] hover:bg-[#b04f30] flex items-center justify-between px-5 cursor-pointer transition-all border-none shadow-md shadow-[#c75b3a]/25 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+              className="w-full rounded-2xl font-bold text-sm text-white flex items-center justify-between px-5 py-3.5 cursor-pointer transition-all border-none shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+              style={{ background: 'linear-gradient(135deg, #c75b3a, #b08d57)' }}
             >
-              <div className="text-left">
-                <span className="text-[10px] uppercase font-normal text-white/80 block">Total: ₹{finalTotal}</span>
-                <span className="text-xs font-black text-white">Book & Pay Online</span>
+              <div className="text-left leading-tight">
+                <span className="text-[10px] uppercase font-normal text-white/75 block tracking-wide">Total Payable</span>
+                <span className="text-base font-black text-white">₹{finalTotal}</span>
               </div>
-              <span className="flex items-center gap-1 text-sm font-black">
+              <span className="flex items-center gap-2 text-sm font-black bg-white/20 px-4 py-2 rounded-xl">
                 Proceed <ArrowRightOutlined />
               </span>
             </button>
             <span className="text-[10px] text-slate-400 block text-center mt-2">
-              🔒 Powered by Razorpay • 100% 30-Day Moneyback Guarantee
+              🔒 Secured by Razorpay • 30-Day Money-Back Guarantee
             </span>
           </div>
         )}

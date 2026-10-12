@@ -637,48 +637,50 @@ function ServiceDetail() {
 
               {/* STEP 2: Success Confirmation */}
               {bookingStep === 2 && (
-                <div className="text-center py-4">
-                  <div className="w-20 h-20 rounded-full mx-auto mb-5 flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #06E07F, #00C853)' }}>
-                    <CheckCircleOutlined className="text-4xl text-white" />
+                <div className="text-center py-2">
+                  <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(135deg, #06E07F, #00C853)' }}>
+                    <CheckCircleOutlined className="text-3xl text-white" />
                   </div>
-                  <h2 className="text-2xl font-bold mb-2" style={{ fontFamily: "'Outfit', sans-serif" }}>Booking Confirmed!</h2>
-                  <p className="text-sm text-slate-500 mb-2">Your booking has been placed successfully.</p>
+                  <h2 className="text-xl font-extrabold mb-1" style={{ fontFamily: "'Outfit', sans-serif", color: '#1c1917' }}>Booking Confirmed!</h2>
+                  <p className="text-xs text-slate-500 mb-3">Your booking has been placed successfully.</p>
                   
                   {confirmedBookingId && (
-                    <p className="text-xs font-mono bg-[#f2efe8] inline-block px-3 py-1.5 rounded-lg mb-5" style={{ color: 'var(--stone)' }}>
-                      Booking ID: {confirmedBookingId.slice(-8).toUpperCase()}
-                    </p>
+                    <div className="inline-flex items-center gap-2 bg-[#f2efe8] px-3 py-1.5 rounded-lg mb-4">
+                      <span className="text-[10px] uppercase font-bold tracking-wider" style={{ color: 'var(--stone)' }}>Booking ID</span>
+                      <span className="text-xs font-mono font-bold text-[#c75b3a]">{confirmedBookingId.slice(-8).toUpperCase()}</span>
+                    </div>
                   )}
 
-                  <p className="text-xs text-slate-400 leading-relaxed mb-6">
-                    <b>{data.ownerObj?.name || 'The provider'}</b> will review your request and confirm within 30 minutes. You can track the status from your bookings dashboard.
+                  <p className="text-xs text-slate-400 leading-relaxed mb-5 max-w-xs mx-auto">
+                    <b className="text-slate-600">{data.ownerObj?.name || 'The service provider'}</b> will confirm your request within 30 minutes.
                   </p>
 
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Button 
-                      type="primary"
-                      onClick={() => {
-                        setShowBookingModal(false);
-                        navigate(`/khoj-services/myBookings?pay=${confirmedBookingId}`);
-                      }}
-                      className="flex-1 !rounded-xl !font-bold !py-5"
-                      style={{ background: 'linear-gradient(135deg, #2563eb, #1d4ed8)', border: 'none' }}
-                      icon={<CreditCardOutlined />}
-                    >
-                      ⚡ Pay Deposit (Razorpay)
-                    </Button>
-                    <Button
+                  {/* Primary CTA: Pay */}
+                  <button
+                    onClick={() => {
+                      setShowBookingModal(false);
+                      navigate(`/khoj-services/myBookings?pay=${confirmedBookingId}`);
+                    }}
+                    className="w-full py-3.5 rounded-2xl font-bold text-sm text-white flex items-center justify-center gap-2 cursor-pointer transition-all border-none shadow-md mb-2"
+                    style={{ background: 'linear-gradient(135deg, #2563eb, #1d4ed8)' }}
+                  >
+                    <CreditCardOutlined /> ⚡ Pay Deposit via Razorpay
+                  </button>
+
+                  {/* Secondary CTAs: View & Close */}
+                  <div className="flex gap-2">
+                    <button
                       onClick={handleViewMyBookings}
-                      className="flex-1 !rounded-xl !font-bold !py-5 !border-[#e8e4d9] !bg-[#faf8f5]"
+                      className="flex-1 py-2.5 rounded-xl text-xs font-bold cursor-pointer transition-all border border-[#e8e4d9] bg-[#faf8f5] text-[#1c1917] hover:bg-[#f2ede4]"
                     >
-                      📋 View Bookings
-                    </Button>
-                    <Button 
+                      📋 My Bookings
+                    </button>
+                    <button 
                       onClick={handleBookingDone}
-                      className="!rounded-xl !font-semibold !py-5 !border-[#e8e4d9]"
+                      className="py-2.5 px-4 rounded-xl text-xs font-semibold cursor-pointer transition-all border border-[#e8e4d9] bg-white text-slate-500 hover:bg-slate-50"
                     >
                       Close
-                    </Button>
+                    </button>
                   </div>
                 </div>
               )}

@@ -858,18 +858,27 @@ function MyBookings() {
         }}
         centered
         width={460}
+        maskStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.75)', backdropFilter: 'blur(6px)' }}
         className="!rounded-3xl overflow-hidden"
       >
         <div className="p-4 font-sans text-left">
           {/* STEP 0: METHOD SELECT */}
           {paymentStep === 0 && (
             <div>
-              <div className="flex items-center justify-between border-b pb-3 mb-4" style={{ borderColor: 'rgba(176,141,87,0.1)' }}>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">Razorpay</span>
-                  <span className="text-xs font-bold text-slate-700">Trusted Gateway</span>
+              <div className="flex items-center justify-between border-b pb-4 mb-5" style={{ borderColor: 'rgba(176,141,87,0.1)' }}>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center flex-shrink-0 shadow-md">
+                    <span className="text-white font-black text-sm">R</span>
+                  </div>
+                  <div>
+                    <span className="text-sm font-black text-slate-800 block leading-tight">Razorpay</span>
+                    <span className="text-[10px] text-slate-400">256-bit Encrypted Gateway</span>
+                  </div>
                 </div>
-                <span className="text-xs font-mono font-bold text-emerald-600">₹499.00</span>
+                <div className="text-right">
+                  <span className="text-[10px] text-slate-400 block">Amount</span>
+                  <span className="text-xl font-black text-emerald-600">₹499.00</span>
+                </div>
               </div>
 
               <p className="text-xs text-slate-500 mb-4">
@@ -985,39 +994,46 @@ function MyBookings() {
 
           {/* STEP 2: PAYMENT SUCCESS RECEIPT */}
           {paymentStep === 2 && (
-            <div className="py-4 text-center">
-              <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl mx-auto mb-3">
-                <CheckCircleOutlined />
+            <div className="py-3 text-center">
+              <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center text-3xl mx-auto mb-3 shadow-md">
+                <CheckCircleOutlined className="text-emerald-600" />
               </div>
-              <h2 className="text-xl font-extrabold text-slate-800" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                Payment Captured!
+              <h2 className="text-xl font-extrabold text-slate-800 mb-1" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                Payment Successful! 🎉
               </h2>
-              <p className="text-xs text-emerald-600 font-semibold mb-4">
-                Razorpay Transaction ID: pay_{Date.now().toString().slice(-8)}
+              <p className="text-xs text-emerald-600 font-semibold mb-1">
+                Authorized via Razorpay Gateway
+              </p>
+              <p className="text-[10px] font-mono text-slate-400 mb-4">
+                TXN: pay_{Date.now().toString().slice(-8)}
               </p>
 
-              <div className="bg-[#faf8f5] p-4 rounded-2xl border text-left text-xs mb-5 space-y-1.5" style={{ borderColor: 'rgba(176,141,87,0.15)' }}>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Service:</span>
-                  <span className="font-bold text-[#1c1917]">{selectedBookingForPay?.serviceName}</span>
+              <div className="bg-[#faf8f5] p-4 rounded-2xl border text-left text-xs mb-4 space-y-2.5" style={{ borderColor: 'rgba(176,141,87,0.15)' }}>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-500">Service</span>
+                  <span className="font-bold text-[#1c1917] text-right max-w-[55%] leading-tight">{selectedBookingForPay?.serviceName}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Amount Paid:</span>
-                  <span className="font-bold text-emerald-600">₹499.00</span>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-500">Amount Paid</span>
+                  <span className="font-black text-emerald-600 text-base">₹499.00</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Payment Method:</span>
-                  <span className="font-semibold text-slate-700">{paymentMethod.toUpperCase()}</span>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-500">Method</span>
+                  <span className="font-bold text-slate-700 uppercase bg-slate-100 px-2 py-0.5 rounded-lg text-[10px]">{paymentMethod}</span>
+                </div>
+                <div className="flex justify-between items-center border-t border-dashed border-slate-200 pt-2">
+                  <span className="text-slate-500">Status</span>
+                  <span className="text-[10px] font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full uppercase tracking-wide">✓ Paid & Verified</span>
                 </div>
               </div>
 
               <Button
                 type="primary"
                 onClick={() => setPaymentModalOpen(false)}
-                className="w-full !rounded-xl !font-bold !py-5"
+                className="w-full !rounded-2xl !font-bold !py-5 !text-sm"
                 style={{ background: 'linear-gradient(135deg, var(--terracotta), var(--gold))', border: 'none' }}
               >
-                Done & Close
+                ✓ Done & Close
               </Button>
             </div>
           )}
