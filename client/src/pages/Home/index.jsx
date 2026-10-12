@@ -440,8 +440,8 @@ function ServiceConstellation({ onSelectCategory }) {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-auto z-[2]"
-      style={{ display: 'block' }}
+      className="hidden md:block absolute inset-0 w-full h-full pointer-events-auto z-[2]"
+      style={{ display: '' }}
     />
   );
 }
@@ -569,7 +569,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════════
           HERO — 100vh Full Viewport
           ═══════════════════════════════════════════════════ */}
-      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden py-12 sm:py-20" style={{ background: 'var(--parchment)' }}>
+      <section className="relative w-full min-h-[auto] sm:min-h-screen flex flex-col justify-center overflow-hidden pt-8 pb-20 sm:py-20" style={{ background: 'var(--parchment)' }}>
         <ParticleField count={20} />
         <ServiceConstellation onSelectCategory={doSelectConstellationCategory} />
         

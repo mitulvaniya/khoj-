@@ -208,15 +208,21 @@ code {
 
 /* ─── CORNER ATMOSPHERE TEXT ─── */
 .corner-text {
-  position: fixed;
-  font-size: 9px;
-  font-family: 'Inter', monospace;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: rgba(140, 120, 102, 0.25);
-  z-index: 50;
-  pointer-events: none;
-  mix-blend-mode: difference;
+  display: none;
+}
+@media (min-width: 768px) {
+  .corner-text {
+    display: block;
+    position: fixed;
+    font-size: 9px;
+    font-family: 'Inter', monospace;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(140, 120, 102, 0.25);
+    z-index: 50;
+    pointer-events: none;
+    mix-blend-mode: difference;
+  }
 }
 
 /* ─── OVERSIZED WATERMARK NUMBERS ─── */

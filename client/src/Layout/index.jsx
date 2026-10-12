@@ -347,12 +347,12 @@ function Index({ children }) {
               </Link>
             )}
 
-            {/* Customer Wallet Quick Pill */}
+            {/* Customer Wallet Quick Pill (Desktop/Tablet) */}
             {!isMerchant && (
               <button
                 type="button"
                 onClick={() => setWalletModalOpen(true)}
-                className="text-[11px] sm:text-xs font-bold text-amber-900 bg-amber-100/90 hover:bg-amber-200/80 border border-amber-300/80 px-2 sm:px-2.5 py-1 rounded-full transition-all cursor-pointer flex items-center gap-1 shadow-xs"
+                className="hidden sm:flex text-xs font-bold text-amber-900 bg-amber-100/90 hover:bg-amber-200/80 border border-amber-300/80 px-2.5 py-1 rounded-full transition-all cursor-pointer items-center gap-1 shadow-xs"
                 title="Khoj Digital Wallet"
               >
                 🪙 ₹{walletBalance}
