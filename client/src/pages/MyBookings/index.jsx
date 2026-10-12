@@ -967,15 +967,14 @@ function MyBookings() {
                 <span style={{ color: 'var(--terracotta)' }}>₹499.00</span>
               </div>
 
-              <Button
-                type="primary"
-                size="large"
+              <button
+                type="button"
                 onClick={handleProcessPayment}
-                className="w-full !rounded-xl !font-bold !py-5"
-                style={{ background: 'linear-gradient(135deg, #2563eb, #1d4ed8)', border: 'none' }}
+                className="w-full h-12 rounded-xl font-bold text-sm text-white flex items-center justify-center cursor-pointer transition-all border-none shadow-md hover:opacity-95"
+                style={{ background: 'linear-gradient(135deg, #2563eb, #1d4ed8)' }}
               >
                 Pay ₹499.00 via Razorpay
-              </Button>
+              </button>
 
               <span className="text-[10px] text-slate-400 block text-center mt-3">
                 <LockOutlined className="mr-1" /> 256-bit Bank Grade Security
@@ -1027,14 +1026,14 @@ function MyBookings() {
                 </div>
               </div>
 
-              <Button
-                type="primary"
+              <button
+                type="button"
                 onClick={() => setPaymentModalOpen(false)}
-                className="w-full !rounded-2xl !font-bold !py-5 !text-sm"
-                style={{ background: 'linear-gradient(135deg, var(--terracotta), var(--gold))', border: 'none' }}
+                className="w-full h-12 rounded-2xl font-bold text-sm text-white flex items-center justify-center cursor-pointer transition-all border-none shadow-md hover:opacity-95"
+                style={{ background: 'linear-gradient(135deg, var(--terracotta), var(--gold))' }}
               >
                 ✓ Done & Close
-              </Button>
+              </button>
             </div>
           )}
         </div>

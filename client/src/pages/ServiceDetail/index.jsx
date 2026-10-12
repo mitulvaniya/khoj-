@@ -616,21 +616,22 @@ function ServiceDetail() {
 
                   {/* Action Buttons */}
                   <div className="flex gap-3 mt-6">
-                    <Button 
+                    <button 
+                      type="button"
                       onClick={() => { setBookingStep(0); setShowBookingModal(false); }}
-                      className="flex-1 !rounded-xl !font-semibold !py-5 !border-[#e8e4d9]"
+                      className="flex-1 h-12 rounded-xl font-semibold text-xs sm:text-sm border border-[#e8e4d9] bg-white text-slate-700 flex items-center justify-center cursor-pointer transition-all hover:bg-slate-50"
                     >
                       Edit Details
-                    </Button>
-                    <Button
-                      type="primary"
-                      loading={bookingLoading}
+                    </button>
+                    <button
+                      type="button"
+                      disabled={bookingLoading}
                       onClick={handleConfirmBooking}
-                      className="flex-1 !rounded-xl !font-bold !py-5"
-                      style={{ background: 'linear-gradient(135deg, var(--terracotta), var(--gold))', border: 'none' }}
+                      className="flex-1 h-12 rounded-xl font-bold text-xs sm:text-sm text-white flex items-center justify-center cursor-pointer transition-all border-none shadow-md hover:opacity-95"
+                      style={{ background: 'linear-gradient(135deg, var(--terracotta), var(--gold))' }}
                     >
-                      Confirm Booking
-                    </Button>
+                      {bookingLoading ? 'Confirming...' : 'Confirm Booking'}
+                    </button>
                   </div>
                 </div>
               )}
@@ -657,11 +658,12 @@ function ServiceDetail() {
 
                   {/* Primary CTA: Pay */}
                   <button
+                    type="button"
                     onClick={() => {
                       setShowBookingModal(false);
                       navigate(`/khoj-services/myBookings?pay=${confirmedBookingId}`);
                     }}
-                    className="w-full py-3.5 rounded-2xl font-bold text-sm text-white flex items-center justify-center gap-2 cursor-pointer transition-all border-none shadow-md mb-2"
+                    className="w-full h-12 rounded-2xl font-bold text-sm text-white flex items-center justify-center gap-2 cursor-pointer transition-all border-none shadow-md mb-2 hover:opacity-95"
                     style={{ background: 'linear-gradient(135deg, #2563eb, #1d4ed8)' }}
                   >
                     <CreditCardOutlined /> ⚡ Pay Deposit via Razorpay
@@ -670,14 +672,16 @@ function ServiceDetail() {
                   {/* Secondary CTAs: View & Close */}
                   <div className="flex gap-2">
                     <button
+                      type="button"
                       onClick={handleViewMyBookings}
-                      className="flex-1 py-2.5 rounded-xl text-xs font-bold cursor-pointer transition-all border border-[#e8e4d9] bg-[#faf8f5] text-[#1c1917] hover:bg-[#f2ede4]"
+                      className="flex-1 h-11 rounded-xl text-xs font-bold flex items-center justify-center cursor-pointer transition-all border border-[#e8e4d9] bg-[#faf8f5] text-[#1c1917] hover:bg-[#f2ede4]"
                     >
                       📋 My Bookings
                     </button>
                     <button 
+                      type="button"
                       onClick={handleBookingDone}
-                      className="py-2.5 px-4 rounded-xl text-xs font-semibold cursor-pointer transition-all border border-[#e8e4d9] bg-white text-slate-500 hover:bg-slate-50"
+                      className="px-5 h-11 rounded-xl text-xs font-semibold flex items-center justify-center cursor-pointer transition-all border border-[#e8e4d9] bg-white text-slate-500 hover:bg-slate-50"
                     >
                       Close
                     </button>

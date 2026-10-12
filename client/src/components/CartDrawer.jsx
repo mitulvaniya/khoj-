@@ -196,26 +196,18 @@ export default function CartDrawer({
                         </div>
                       </div>
 
-                      {/* Quantity Stepper */}
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center border border-[#e8e4d9] rounded-xl bg-[#faf8f5] px-1.5 py-1">
-                          <button
-                            onClick={() => onUpdateQty(item.id, item.quantity - 1)}
-                            className="w-5 h-5 flex items-center justify-center rounded-lg text-slate-600 hover:text-[#c75b3a] hover:bg-white border-none cursor-pointer text-xs"
-                          >
-                            <MinusOutlined style={{ fontSize: 10 }} />
-                          </button>
-                          <span className="w-7 text-center font-bold text-xs text-[#1c1917]">{item.quantity}</span>
-                          <button
-                            onClick={() => onUpdateQty(item.id, item.quantity + 1)}
-                            className="w-5 h-5 flex items-center justify-center rounded-lg text-slate-600 hover:text-[#c75b3a] hover:bg-white border-none cursor-pointer text-xs"
-                          >
-                            <PlusOutlined style={{ fontSize: 10 }} />
-                          </button>
-                        </div>
-                        <span className="text-xs font-black text-[#1c1917] w-14 text-right">
-                          ₹{item.price * item.quantity}
+                      {/* Service Rate & Remove Action */}
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm font-black text-[#1c1917]">
+                          ₹{item.price}
                         </span>
+                        <button
+                          onClick={() => onRemoveItem(item.id)}
+                          className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-all cursor-pointer bg-white"
+                          title="Remove service"
+                        >
+                          <DeleteOutlined style={{ fontSize: 13 }} />
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -255,8 +247,9 @@ export default function CartDrawer({
                         className="!rounded-xl !text-xs font-mono uppercase"
                       />
                       <button
+                        type="button"
                         onClick={() => handleApplyCoupon()}
-                        className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#c75b3a] hover:bg-[#b04f30] border-none cursor-pointer transition-all"
+                        className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-[#c75b3a] hover:bg-[#b04f30] border-none cursor-pointer transition-all flex items-center justify-center"
                       >
                         Apply
                       </button>
@@ -413,21 +406,22 @@ export default function CartDrawer({
 
         {/* Sticky Footer Checkout Button */}
         {cartItems.length > 0 && (
-          <div className="sticky bottom-0 left-0 right-0 p-4 bg-white border-t border-[#e8e4d9] shadow-2xl z-10">
+          <div className="sticky bottom-0 left-0 right-0 p-4 pb-12 bg-white border-t border-[#e8e4d9] shadow-2xl z-10">
             <button
               onClick={handleCheckout}
-              className="w-full rounded-2xl font-bold text-sm text-white flex items-center justify-between px-5 py-3.5 cursor-pointer transition-all border-none shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+              className="w-full h-14 rounded-2xl font-bold text-sm text-white flex items-center justify-between px-5 cursor-pointer transition-all border-none shadow-lg hover:-translate-y-0.5 active:translate-y-0"
               style={{ background: 'linear-gradient(135deg, #c75b3a, #b08d57)' }}
             >
-              <div className="text-left leading-tight">
-                <span className="text-[10px] uppercase font-normal text-white/75 block tracking-wide">Total Payable</span>
-                <span className="text-base font-black text-white">₹{finalTotal}</span>
+              <div className="text-left flex flex-col justify-center">
+                <span className="text-[10px] uppercase font-bold text-white/80 block leading-tight tracking-wider">Total Payable</span>
+                <span className="text-xl font-black text-white leading-tight">₹{finalTotal}</span>
               </div>
-              <span className="flex items-center gap-2 text-sm font-black bg-white/20 px-4 py-2 rounded-xl">
-                Proceed <ArrowRightOutlined />
-              </span>
+              <div className="flex items-center justify-center gap-2 text-xs font-black bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all">
+                <span>Proceed</span>
+                <ArrowRightOutlined />
+              </div>
             </button>
-            <span className="text-[10px] text-slate-400 block text-center mt-2">
+            <span className="text-[10px] text-slate-400 block text-center mt-2.5">
               🔒 Secured by Razorpay • 30-Day Money-Back Guarantee
             </span>
           </div>
