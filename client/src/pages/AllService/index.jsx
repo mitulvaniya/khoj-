@@ -1377,7 +1377,7 @@ function Services() {
                     key={p._id}
                     onMouseEnter={() => handleCardHover(p._id, p.lat, p.lng)}
                     onMouseLeave={() => setHoveredId(null)}
-                    className="group bg-white rounded-2xl border p-6 flex flex-col md:flex-row gap-6 shadow-sm hover:shadow-xl transition-all duration-300 relative text-left"
+                    className="group bg-white rounded-2xl border p-4 sm:p-6 flex flex-col sm:flex-row gap-4 sm:gap-6 shadow-sm hover:shadow-xl transition-all duration-300 relative text-left"
                     style={{
                       borderColor: isHovered ? 'rgba(199, 91, 58, 0.4)' : 'rgba(176, 141, 87, 0.15)',
                       transform: isHovered ? 'translateY(-2px)' : 'none',

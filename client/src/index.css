@@ -334,20 +334,33 @@ code {
   -webkit-box-align: center;
   align-items: center;
   flex-wrap: wrap;
+  min-height: 100vh;
 }
 .signin-form {
-  width: 40%;
-  padding: 2.5rem 5.5rem 0rem 5.5rem;
+  width: 100%;
+  padding: 2rem 1.5rem;
+}
+@media (min-width: 1024px) {
+  .signin-form {
+    width: 40%;
+    padding: 2.5rem 5.5rem 0rem 5.5rem;
+  }
 }
 .signin-image-div {
-  background: url('images/login-page-2.jpg');
-  background-position: center center;
-  height: 100vh;
-  background-size: cover;
-  width: 60%;
-  position: fixed;
-  top: 0;
-  right: 0;
+  display: none;
+}
+@media (min-width: 1024px) {
+  .signin-image-div {
+    display: block;
+    background: url('images/login-page-2.jpg');
+    background-position: center center;
+    height: 100vh;
+    background-size: cover;
+    width: 60%;
+    position: fixed;
+    top: 0;
+    right: 0;
+  }
 }
 .title {
   margin-bottom: 0 !important;

@@ -371,7 +371,7 @@ function MyBookings() {
       </div>
 
       {/* Status Filter Tabs */}
-      <div className="flex flex-wrap gap-2 mb-8">
+      <div className="flex gap-2 mb-6 sm:mb-8 overflow-x-auto pb-2 scrollbar-none -mx-2 px-2 sm:mx-0 sm:px-0 flex-nowrap sm:flex-wrap">
         {[
           { key: 'all', label: 'All Bookings' },
           { key: 'pending', label: 'Pending' },
@@ -383,7 +383,7 @@ function MyBookings() {
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={`px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
+            className={`whitespace-nowrap flex-shrink-0 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
               activeTab === tab.key
                 ? 'bg-[#c75b3a] text-white border-[#c75b3a] shadow-md shadow-[#c75b3a]/20'
                 : 'bg-white text-[#5c5650] border-[#e8e4d9] hover:bg-[#faf8f5]'

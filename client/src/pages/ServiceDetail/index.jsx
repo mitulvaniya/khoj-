@@ -340,8 +340,8 @@ function ServiceDetail() {
           <div className="w-full lg:w-[65%] flex flex-col gap-8">
             
             {/* Header Hero Cover */}
-            <div className="relative rounded-3xl overflow-hidden border" style={{ borderColor: 'rgba(176,141,87,0.15)' }}>
-              <div className="h-64 sm:h-80 w-full relative bg-[#f2efe8]">
+            <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border" style={{ borderColor: 'rgba(176,141,87,0.15)' }}>
+              <div className="h-48 sm:h-80 w-full relative bg-[#f2efe8]">
                 <img 
                   src={getCategoryImage(data.typeObj?.name)} 
                   alt={data.name} 
@@ -350,29 +350,29 @@ function ServiceDetail() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
               </div>
 
-              <div className="absolute bottom-6 left-6 right-6 text-left text-white">
+              <div className="absolute bottom-3 sm:bottom-6 left-3 sm:left-6 right-3 sm:right-6 text-left text-white">
                 <Tag 
-                  className="!border-none !rounded-full !px-3 !py-1 !text-[10px] !font-bold !uppercase !tracking-wider !mb-3 shadow-md"
+                  className="!border-none !rounded-full !px-2.5 sm:!px-3 !py-0.5 sm:!py-1 !text-[9px] sm:!text-[10px] !font-bold !uppercase !tracking-wider !mb-1.5 sm:!mb-3 shadow-md"
                   style={{ background: 'linear-gradient(135deg, var(--terracotta), var(--gold))', color: '#fff' }}
                 >
                   {data.typeObj?.name || 'Verified Service'}
                 </Tag>
-                <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mt-1 text-white" style={{ fontFamily: "'Outfit', sans-serif" }}>
+                <h1 className="text-xl sm:text-4xl font-extrabold tracking-tight mt-0.5 sm:mt-1 text-white leading-tight" style={{ fontFamily: "'Outfit', sans-serif" }}>
                   {data.name}
                 </h1>
                 
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 text-xs font-light text-white/80">
-                  <span className="flex items-center gap-1.5"><StarOutlined style={{ color: 'var(--gold)' }} /> <b>{liveRating || data.rating || '4.8'}</b> ({liveReviewsCount || data.reviews || '45'} reviews)</span>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 sm:mt-4 text-[11px] sm:text-xs font-light text-white/80">
+                  <span className="flex items-center gap-1.5"><StarOutlined style={{ color: 'var(--gold)' }} /> <b>{liveRating || data.rating || '4.8'}</b> ({liveReviewsCount || data.reviews || '45'})</span>
                   <span>●</span>
                   <span>📍 {data.addressObj?.newCity?.city || 'Local Area'}</span>
                   <span>●</span>
-                  <span className="flex items-center gap-1.5"><CheckCircleOutlined style={{ color: '#06E07F' }} /> 100% Background Checked</span>
+                  <span className="flex items-center gap-1"><CheckCircleOutlined style={{ color: '#06E07F' }} /> 100% Verified</span>
                 </div>
               </div>
             </div>
 
             {/* Profile Content Tabs */}
-            <div className="bg-white rounded-3xl border p-6 sm:p-8 shadow-sm" style={{ borderColor: 'rgba(176,141,87,0.15)' }}>
+            <div className="bg-white rounded-2xl sm:rounded-3xl border p-4 sm:p-8 shadow-sm" style={{ borderColor: 'rgba(176,141,87,0.15)' }}>
               <Tabs 
                 defaultActiveKey="ratecard"
                 className="[&_.ant-tabs-nav]:!mb-8 [&_.ant-tabs-tab-active]:!text-[#c75b3a] [&_.ant-tabs-ink-bar]:!bg-[#c75b3a] [&_.ant-tabs-tab]:hover:!text-[#c75b3a]"

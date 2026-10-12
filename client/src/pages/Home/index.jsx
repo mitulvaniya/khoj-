@@ -452,10 +452,10 @@ function ServiceConstellation({ onSelectCategory }) {
 function CornerAtmosphere() {
   return (
     <>
-      <div className="corner-text top-4 left-6">VERIFIED EXPERTS</div>
-      <div className="corner-text top-4 right-6 text-right">TRUSTED BY THOUSANDS</div>
-      <div className="corner-text bottom-4 left-6">ZERO HIDDEN COSTS</div>
-      <div className="corner-text bottom-4 right-6 text-right">© 2026 KHOJ</div>
+      <div className="corner-text hidden md:block top-4 left-6">VERIFIED EXPERTS</div>
+      <div className="corner-text hidden md:block top-4 right-6 text-right">TRUSTED BY THOUSANDS</div>
+      <div className="corner-text hidden md:block bottom-4 left-6">ZERO HIDDEN COSTS</div>
+      <div className="corner-text hidden md:block bottom-4 right-6 text-right">© 2026 KHOJ</div>
     </>
   );
 }
@@ -569,30 +569,30 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════════
           HERO — 100vh Full Viewport
           ═══════════════════════════════════════════════════ */}
-      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden py-20" style={{ background: 'var(--parchment)' }}>
+      <section className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden py-12 sm:py-20" style={{ background: 'var(--parchment)' }}>
         <ParticleField count={20} />
         <ServiceConstellation onSelectCategory={doSelectConstellationCategory} />
         
-        <div className="relative z-10 max-w-[1400px] mx-auto w-full px-8 sm:px-12 lg:px-20 pointer-events-none">
+        <div className="relative z-10 max-w-[1400px] mx-auto w-full px-4 sm:px-12 lg:px-20 pointer-events-none">
           {/* Kicker */}
           <div 
-            className="mb-8"
+            className="mb-4 sm:mb-8"
             style={{
               opacity: 1,
               transform: 'translateY(0)',
               transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s',
             }}
           >
-            <span className="text-[10px] tracking-[0.4em] uppercase" style={{ color: 'var(--terracotta)', fontFamily: "'Inter', monospace" }}>
+            <span className="text-[10px] tracking-[0.3em] sm:tracking-[0.4em] uppercase" style={{ color: 'var(--terracotta)', fontFamily: "'Inter', monospace" }}>
               ● Local Service Discovery Platform
             </span>
           </div>
 
           {/* Massive Headline */}
           <h1 
-            className="font-black tracking-[-0.04em] leading-[0.9] mb-10 text-left"
+            className="font-black tracking-[-0.04em] leading-[0.95] sm:leading-[0.9] mb-6 sm:mb-10 text-left"
             style={{
-              fontSize: 'clamp(48px, 9vw, 120px)',
+              fontSize: 'clamp(38px, 8.5vw, 120px)',
               color: 'var(--ink)',
               fontFamily: "'Outfit', sans-serif",
             }}
@@ -622,7 +622,7 @@ export default function Home() {
 
           {/* Subtitle */}
           <p 
-            className="text-lg sm:text-xl max-w-xl leading-relaxed font-light mb-12 text-left"
+            className="text-sm sm:text-lg lg:text-xl max-w-xl leading-relaxed font-light mb-8 sm:mb-12 text-left"
             style={{
               color: 'var(--stone)',
               opacity: 1,
@@ -635,11 +635,11 @@ export default function Home() {
 
           {/* Search Bar */}
           <div 
-            className="flex flex-col sm:flex-row gap-3 max-w-2xl p-4 rounded-2xl border pointer-events-auto"
+            className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 max-w-2xl p-2.5 sm:p-4 rounded-2xl border pointer-events-auto shadow-sm"
             style={{
-              background: 'rgba(242, 239, 232, 0.8)',
+              background: 'rgba(242, 239, 232, 0.95)',
               backdropFilter: 'blur(20px)',
-              borderColor: 'rgba(176, 141, 87, 0.2)',
+              borderColor: 'rgba(176, 141, 87, 0.25)',
               opacity: 1,
               transform: 'translateY(0)',
               transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.7s',
@@ -716,7 +716,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════════
           SERVICEABILITY & PINCODE COVERAGE CHECKER
           ═══════════════════════════════════════════════════ */}
-      <section className="relative w-full py-16 px-6 sm:px-12 lg:px-20 border-y border-[#e8e4d9]/60" style={{ background: '#f5f2eb' }}>
+      <section className="relative w-full py-10 sm:py-16 px-3 sm:px-12 lg:px-20 border-y border-[#e8e4d9]/60" style={{ background: '#f5f2eb' }}>
         <div className="max-w-[1400px] mx-auto">
           <ServiceabilityChecker />
         </div>
@@ -725,7 +725,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════════
           HOME PROBLEM DIAGNOSTIC & FAIR RATE BENCHMARK
           ═══════════════════════════════════════════════════ */}
-      <section id="home-diagnostics" className="relative w-full py-20 px-6 sm:px-12 lg:px-20 border-b border-[#e8e4d9]/60" style={{ background: '#fbf9f6' }}>
+      <section id="home-diagnostics" className="relative w-full py-12 sm:py-20 px-3 sm:px-12 lg:px-20 border-b border-[#e8e4d9]/60" style={{ background: '#fbf9f6' }}>
         <div className="max-w-[1400px] mx-auto">
           <HomeDiagnostics />
         </div>
@@ -734,15 +734,15 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════════
           PHILOSOPHY — Dark Full Viewport Panel
           ═══════════════════════════════════════════════════ */}
-      <section className="relative w-full min-h-screen flex items-center section-dark overflow-hidden py-24">
+      <section className="relative w-full min-h-[60vh] sm:min-h-screen flex items-center section-dark overflow-hidden py-14 sm:py-24">
         <ParticleField count={15} dark />
         
         {/* Watermark */}
-        <div className="watermark-number right-8 top-1/2 -translate-y-1/2" style={{ color: '#fff' }}>01</div>
+        <div className="watermark-number hidden sm:block right-8 top-1/2 -translate-y-1/2" style={{ color: '#fff' }}>01</div>
 
-        <div className="relative z-10 max-w-[1000px] mx-auto px-8 sm:px-12 lg:px-20">
+        <div className="relative z-10 max-w-[1000px] mx-auto px-4 sm:px-12 lg:px-20">
           <span 
-            className="text-[10px] tracking-[0.4em] uppercase block mb-12"
+            className="text-[10px] tracking-[0.3em] sm:tracking-[0.4em] uppercase block mb-6 sm:mb-12"
             style={{
               color: 'var(--terracotta)',
               opacity: 1,
@@ -754,9 +754,9 @@ export default function Home() {
           </span>
 
           <h2 
-            className="font-bold tracking-tight leading-[1.15] mb-10 text-left"
+            className="font-bold tracking-tight leading-[1.15] mb-6 sm:mb-10 text-left"
             style={{
-              fontSize: 'clamp(28px, 4vw, 56px)',
+              fontSize: 'clamp(24px, 4vw, 56px)',
               color: 'var(--cream)',
               fontFamily: "'Outfit', sans-serif",
               opacity: 1,
@@ -769,7 +769,7 @@ export default function Home() {
           </h2>
 
           <p 
-            className="text-base sm:text-lg font-light leading-relaxed max-w-2xl text-left"
+            className="text-sm sm:text-lg font-light leading-relaxed max-w-2xl text-left"
             style={{
               color: 'rgba(242, 239, 232, 0.65)',
               opacity: 1,
@@ -785,7 +785,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════════
           HOW IT WORKS — Light, Oversized Numbering
           ═══════════════════════════════════════════════════ */}
-      <section className="relative w-full py-32 px-8 sm:px-12 lg:px-20 section-light overflow-hidden">
+      <section className="relative w-full py-16 sm:py-32 px-4 sm:px-12 lg:px-20 section-light overflow-hidden">
         <div className="watermark-number left-8 top-8" style={{ color: 'var(--ink)' }}>02</div>
 
         <div className="max-w-[1200px] mx-auto relative z-10">
