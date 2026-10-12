@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Tabs, Tag, Button, Input, DatePicker, message, Modal, Steps } from 'antd';
-import { InfoCircleOutlined, EnvironmentOutlined, BarChartOutlined, UserOutlined, StarOutlined, ArrowLeftOutlined, CheckCircleOutlined, CompassOutlined, CalendarOutlined, ClockCircleOutlined, FileTextOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, EnvironmentOutlined, BarChartOutlined, UserOutlined, StarOutlined, ArrowLeftOutlined, CheckCircleOutlined, CompassOutlined, CalendarOutlined, ClockCircleOutlined, FileTextOutlined, CreditCardOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import Spinner from '../Spinner';
 import API from '../../api';
@@ -14,6 +14,7 @@ import OwnerInfo from './OwnerInfo';
 import Reviews from './Reviews';
 import ServiceRateCard from '../../components/ServiceRateCard';
 import CartDrawer from '../../components/CartDrawer';
+import { SHARED_MOCK_PROVIDERS, getMockProviderById } from '../../utils/mockProviders';
 
 const { TabPane } = Tabs;
 
@@ -223,13 +224,13 @@ function ServiceDetail() {
         if (response.data.success && response.data.data.length > 0) {
           setData(response.data.data[0]);
         } else {
-          const fallback = MOCK_DETAIL_POOL.find(p => p._id === serviceId);
+          const fallback = getMockProviderById(serviceId) || MOCK_DETAIL_POOL.find(p => p._id === serviceId) || SHARED_MOCK_PROVIDERS[0];
           if (fallback) setData(fallback);
         }
       })
       .catch((error) => {
-        console.error('Error fetching service details, loading fallback mock:', error);
-        const fallback = MOCK_DETAIL_POOL.find(p => p._id === serviceId);
+        console.log('Using local provider data fallback for:', serviceId);
+        const fallback = getMockProviderById(serviceId) || MOCK_DETAIL_POOL.find(p => p._id === serviceId) || SHARED_MOCK_PROVIDERS[0];
         if (fallback) setData(fallback);
       })
       .finally(() => setLoading(false));
@@ -237,11 +238,6 @@ function ServiceDetail() {
 
   // ─── STEP 1: Validate form & proceed to review ─────────
   const handleProceedToReview = () => {
-    if (!isLoggedIn) {
-      message.warning('Please login first to book a service!');
-      navigate('/login');
-      return;
-    }
     if (!bookingDate) {
       message.error('Please select a booking date!');
       return;
@@ -260,10 +256,10 @@ function ServiceDetail() {
     const newBookingId = 'bk_' + Date.now();
     const payload = {
       _id: newBookingId,
-      userId: globalData.user?._id || localStorage.getItem('user_id') || 'guest',
-      userName: globalData.user?.name || globalData.user?.fullname || 'Guest User',
-      userEmail: globalData.user?.email || '',
-      userPhone: globalData.user?.number || '',
+      userId: globalData.user?._id || localStorage.getItem('user_id') || 'guest_demo',
+      userName: globalData.user?.name || globalData.user?.fullname || 'Demo Customer',
+      userEmail: globalData.user?.email || 'customer@khoj.app',
+      userPhone: globalData.user?.number || '+91 98765 43210',
       serviceId: data._id || data.service_id || serviceId,
       serviceName: data.name,
       serviceCategory: data.typeObj?.name || 'Electrician',
@@ -503,7 +499,7 @@ function ServiceDetail() {
                 onClick={handleProceedToReview}
                 className="w-full h-12 mt-2 rounded-xl font-bold text-sm text-white bg-[#c75b3a] hover:bg-[#b04f30] flex items-center justify-center gap-2 cursor-pointer transition-all duration-300 border-none shadow-md shadow-[#c75b3a]/25 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
               >
-                {isLoggedIn ? 'Review & Confirm Booking' : 'Login to Book'}
+                Review & Confirm Booking ➔
               </button>
 
               <div className="text-center mt-3 pt-3 border-t border-[#e8e4d9]/50">
@@ -658,20 +654,30 @@ function ServiceDetail() {
                     <b>{data.ownerObj?.name || 'The provider'}</b> will review your request and confirm within 30 minutes. You can track the status from your bookings dashboard.
                   </p>
 
-                  <div className="flex gap-3">
+                  <div className="flex flex-col sm:flex-row gap-3">
                     <Button 
-                      onClick={handleBookingDone}
-                      className="flex-1 !rounded-xl !font-semibold !py-5 !border-[#e8e4d9]"
+                      type="primary"
+                      onClick={() => {
+                        setShowBookingModal(false);
+                        navigate(`/khoj-services/myBookings?pay=${confirmedBookingId}`);
+                      }}
+                      className="flex-1 !rounded-xl !font-bold !py-5"
+                      style={{ background: 'linear-gradient(135deg, #2563eb, #1d4ed8)', border: 'none' }}
+                      icon={<CreditCardOutlined />}
                     >
-                      Close
+                      ⚡ Pay Deposit (Razorpay)
                     </Button>
                     <Button
-                      type="primary"
                       onClick={handleViewMyBookings}
-                      className="flex-1 !rounded-xl !font-bold !py-5"
-                      style={{ background: 'linear-gradient(135deg, var(--terracotta), var(--gold))', border: 'none' }}
+                      className="flex-1 !rounded-xl !font-bold !py-5 !border-[#e8e4d9] !bg-[#faf8f5]"
                     >
-                      View My Bookings
+                      📋 View Bookings
+                    </Button>
+                    <Button 
+                      onClick={handleBookingDone}
+                      className="!rounded-xl !font-semibold !py-5 !border-[#e8e4d9]"
+                    >
+                      Close
                     </Button>
                   </div>
                 </div>

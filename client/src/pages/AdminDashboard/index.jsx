@@ -217,6 +217,7 @@ function AdminDashboard() {
           columns={columns}
           dataSource={providers}
           pagination={false}
+          scroll={{ x: 600 }}
           className="[&_.ant-table-thead_th]:!bg-[#faf8f5] [&_.ant-table-thead_th]:!text-[#5c5650] [&_.ant-table-thead_th]:!font-bold [&_.ant-table-thead_th]:!text-xs [&_.ant-table-thead_th]:!uppercase"
         />
       </div>

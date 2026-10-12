@@ -64,6 +64,60 @@ const STATUS_CONFIG = {
   },
 };
 
+const DEFAULT_DEMO_BOOKINGS = [
+  {
+    _id: 'bk_demo_101',
+    serviceName: 'Rajesh Electricals & Home Wiring',
+    serviceCategory: 'Electrician',
+    serviceOwnerName: 'Rajesh Kumar',
+    serviceOwnerPhone: '+91 98251 77412',
+    servicePrice: '₹499.00',
+    bookingDate: new Date(Date.now() + 86400000).toISOString(),
+    timeSlot: 'Morning (9 AM - 12 PM)',
+    notes: 'Switchboard sparking and ceiling fan regulator replacement in living room.',
+    address: 'Flat 402, Royal Residency, GIDC Road, Ankleshwar',
+    status: 'pending',
+    doorstepPin: '4821',
+    createdAt: new Date(Date.now() - 3600000).toISOString(),
+  },
+  {
+    _id: 'bk_demo_102',
+    serviceName: 'Sharma Plumbing & Water Solutions',
+    serviceCategory: 'Plumber',
+    serviceOwnerName: 'Amit Sharma',
+    serviceOwnerPhone: '+91 98790 33418',
+    servicePrice: '₹350.00',
+    bookingDate: new Date().toISOString(),
+    timeSlot: 'Afternoon (12 PM - 3 PM)',
+    notes: 'Main bathroom concealed pipe leakage and kitchen sink mixer faucet fixing.',
+    address: 'B-12, Green City Row Houses, Station Road, Ankleshwar',
+    status: 'confirmed',
+    doorstepPin: '7392',
+    createdAt: new Date(Date.now() - 14400000).toISOString(),
+  },
+  {
+    _id: 'bk_demo_103',
+    serviceName: 'Urban Clean Pro & Sanitization',
+    serviceCategory: 'Cleaning',
+    serviceOwnerName: 'Sunita Patel',
+    serviceOwnerPhone: '+91 94270 55198',
+    servicePrice: '₹1,299.00',
+    bookingDate: new Date(Date.now() - 86400000).toISOString(),
+    timeSlot: 'Morning (9 AM - 12 PM)',
+    notes: 'Deep kitchen degreasing & full bathroom chemical scrub.',
+    address: 'Flat 101, Shanti Tower, Valia Road, Ankleshwar',
+    status: 'completed',
+    doorstepPin: '9154',
+    rating: 5,
+    review: {
+      rating: 5,
+      reviewComment: 'Arrived promptly on time! Deep cleaned every corner with modern equipment. Highly recommended.',
+      tags: ['Punctual', 'Spotless Cleaning', 'Polite Technician'],
+    },
+    createdAt: new Date(Date.now() - 90000000).toISOString(),
+  },
+];
+
 function MyBookings() {
   const navigate = useNavigate();
   const { data: globalData } = useContext(GlobalContext);
@@ -144,44 +198,64 @@ function MyBookings() {
   const fetchBookings = async () => {
     setLoading(true);
     let list = [];
-    try {
-      const endpoint = isMerchant
-        ? API.getMerchantBookings.replace(':userId', userId)
-        : API.getUserBookings.replace(':userId', userId);
-      
-      const response = await axios.get(endpoint);
-      if (response.data && response.data.success && Array.isArray(response.data.data)) {
-        list = response.data.data;
-      }
-    } catch (error) {
-      console.log('Using local bookings fallback');
-    } finally {
-      // Merge with local_bookings stored in localStorage
+    if (userId) {
       try {
-        const local = JSON.parse(localStorage.getItem('local_bookings') || '[]');
-        local.forEach(item => {
-          if (!list.some(b => b._id === item._id)) {
-            list.unshift(item);
-          }
-        });
-      } catch (e) {
-        console.error(e);
+        const endpoint = isMerchant
+          ? API.getMerchantBookings.replace(':userId', userId)
+          : API.getUserBookings.replace(':userId', userId);
+        
+        const response = await axios.get(endpoint);
+        if (response.data && response.data.success && Array.isArray(response.data.data)) {
+          list = response.data.data;
+        }
+      } catch (error) {
+        console.log('Using local bookings fallback');
       }
-
-      setBookings(list);
-      setLoading(false);
     }
+
+    // Merge with local_bookings stored in localStorage
+    try {
+      const local = JSON.parse(localStorage.getItem('local_bookings') || '[]');
+      local.forEach(item => {
+        if (!list.some(b => b._id === item._id)) {
+          list.unshift(item);
+        }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+
+    // If list is empty (e.g. demo presentation mode), populate with realistic mock bookings
+    if (list.length === 0) {
+      list = [...DEFAULT_DEMO_BOOKINGS];
+    }
+
+    setBookings(list);
+    setLoading(false);
   };
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      navigate('/login');
-      return;
+    try {
+      const localPaid = JSON.parse(localStorage.getItem('local_paid') || '{}');
+      setPaidBookings(localPaid);
+    } catch (e) {}
+
+    fetchBookings();
+  }, [userId, isMerchant]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-open Razorpay checkout modal if ?pay= query param is present
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const payTargetId = params.get('pay');
+    if (payTargetId && bookings.length > 0) {
+      const target = bookings.find(b => b._id === payTargetId) || bookings[0];
+      if (target) {
+        setSelectedBookingForPay(target);
+        setPaymentStep(0);
+        setPaymentModalOpen(true);
+      }
     }
-    if (userId) {
-      fetchBookings();
-    }
-  }, [userId, isLoggedIn]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [bookings]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── UPDATE BOOKING STATUS ────────────────────
   const handleStatusUpdate = async (bookingId, newStatus) => {

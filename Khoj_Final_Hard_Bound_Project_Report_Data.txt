@@ -16,7 +16,7 @@ Project Title               KHOJ — An AI-Powered Hyperlocal Home Service Disco
 Student Name                Mitul Vaniya
 Enrollment Number           23SE02IE055
 Program / Branch            Bachelor of Technology (B.Tech) in Information Technology
-Semester                    7th / 8th Semester (Final Year Major Project)
+Semester                    7th Semester (Final Year Major Project)
 Company / Organization      P P Savani University (Department of Information Technology)
 Department / Domain         Full Stack Web Engineering & Cloud Distributed Systems
 Mentor (Company)            Self-Directed / Industry Software Practices
@@ -1318,23 +1318,23 @@ FINAL HARD-BOUND SUBMISSION CHECKLIST
 
 Check   Item Requirement                                                Status / Remarks
 ----------------------------------------------------------------------------------------------------
-[X]     Hard-Bound Cover Page with PPSU Gold Embossing / Print         Verified & Formatted
-[X]     Official Certificate of Completion with Signatures             Verified & Included
-[X]     Candidate Declaration Statement Signed                         Verified & Included
-[X]     Formal Acknowledgement Section                                 Verified & Included
-[X]     Abstract / Executive Summary with Keywords                     Verified (320 words)
-[X]     Table of Contents with Chapters, Sections & Page Numbers       Verified & Structured
-[X]     List of Figures with Chapter-wise Numbering                    Verified & Numbered
-[X]     List of Tables with Chapter-wise Numbering                     Verified & Numbered
-[X]     List of Abbreviations / Acronyms                               Verified & Defined
-[X]     All 15 Core Technical Chapters Fully Detailed                  Verified & Complete
-[X]     All 8 UML, Architecture, Flow & ER Diagrams Described          Verified & Documented
-[X]     Comprehensive Testing Evidence & Defect Resolution Matrix      Verified (84 Test Cases)
-[X]     Final Results, Performance Analysis & Core Web Vitals          Verified (92+ Score)
-[X]     APA 7th Edition References with Active URLs Included           Verified (11 References)
-[X]     Consolidated Appendices A, B, C, D (All 4 Progress Reports)    Verified & Summarized
-[X]     Live GitHub, Netlify, and Render Deployment Evidence Included  Verified & Accessible
-[X]     Institute Mentor Evaluation Sheet & Score Rubric Ready         Verified & Included
+[]     Hard-Bound Cover Page with PPSU Gold Embossing / Print         Verified & Formatted
+[]     Official Certificate of Completion with Signatures             Verified & Included
+[]     Candidate Declaration Statement Signed                         Verified & Included
+[]     Formal Acknowledgement Section                                 Verified & Included
+[]     Abstract / Executive Summary with Keywords                     Verified (320 words)
+[]     Table of Contents with Chapters, Sections & Page Numbers       Verified & Structured
+[]     List of Figures with Chapter-wise Numbering                    Verified & Numbered
+[]     List of Tables with Chapter-wise Numbering                     Verified & Numbered
+[]     List of Abbreviations / Acronyms                               Verified & Defined
+[]     All 15 Core Technical Chapters Fully Detailed                  Verified & Complete
+[]     All 8 UML, Architecture, Flow & ER Diagrams Described          Verified & Documented
+[]     Comprehensive Testing Evidence & Defect Resolution Matrix      Verified (84 Test Cases)
+[]     Final Results, Performance Analysis & Core Web Vitals          Verified (92+ Score)
+[]     APA 7th Edition References with Active URLs Included           Verified (11 References)
+[]     Consolidated Appendices A, B, C, D (All 4 Progress Reports)    Verified & Summarized
+[]     Live GitHub, Netlify, and Render Deployment Evidence Included  Verified & Accessible
+[]     Institute Mentor Evaluation Sheet & Score Rubric Ready         Verified & Included
 ----------------------------------------------------------------------------------------------------
 
 

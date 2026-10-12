@@ -1267,10 +1267,10 @@ function Services() {
 
       {/* ALL-INDIA REGIONAL & PROXIMITY CONTROL BAR */}
       <div className="flex flex-col gap-3 p-4 mb-6 bg-white rounded-2xl border shadow-xs" style={{ borderColor: 'rgba(176,141,87,0.18)' }}>
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           {/* Quick Hub Pills across India */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-bold text-stone-700 flex items-center gap-1.5 mr-1">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none flex-nowrap sm:flex-wrap">
+            <span className="text-xs font-bold text-stone-700 flex items-center gap-1.5 mr-1 flex-shrink-0">
               <EnvironmentOutlined className="text-[#c75b3a]" /> Pan-India Hubs:
             </span>
             {[
@@ -1293,7 +1293,7 @@ function Services() {
                   onClick={() => {
                     navigate(`/khoj-services/allServices?category=${catParam || 'all'}&state=all&city=${encodeURIComponent(cityItem.value)}&name=${nameParam || ''}`);
                   }}
-                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1 ${
+                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1 flex-shrink-0 whitespace-nowrap ${
                     isSelected
                       ? 'bg-[#c75b3a] text-white shadow-md scale-105'
                       : 'bg-[#f5f1ea] text-[#6d5b4a] hover:bg-[#ebdfce] hover:text-[#1a1a1a]'
@@ -1309,7 +1309,7 @@ function Services() {
           <button
             onClick={handleUseCurrentGPS}
             disabled={locatingGps}
-            className="flex items-center gap-1.5 bg-[#f5efe6] hover:bg-[#ebdcc8] px-3.5 py-1.5 rounded-full text-xs font-bold text-[#8c6b45] border border-[#dfd2be] transition-all shadow-2xs"
+            className="flex items-center gap-1.5 bg-[#f5efe6] hover:bg-[#ebdcc8] px-3.5 py-1.5 rounded-full text-xs font-bold text-[#8c6b45] border border-[#dfd2be] transition-all shadow-2xs flex-shrink-0 self-start sm:self-auto"
           >
             <AimOutlined className={`text-[#c75b3a] ${locatingGps ? 'animate-spin' : ''}`} />
             <span>{locatingGps ? 'Locating GPS...' : '📍 Use My Exact Location'}</span>
@@ -1317,9 +1317,9 @@ function Services() {
         </div>
 
         {/* Proximity Radius Filter & Status line */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-stone-100 text-xs">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-stone-600">Proximity Radius:</span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-stone-100 text-xs">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none flex-nowrap sm:flex-wrap">
+            <span className="font-semibold text-stone-600 flex-shrink-0">Proximity Radius:</span>
             {[
               { label: '⚡ Within 10 km', value: '10' },
               { label: '🚗 Within 25 km', value: '25' },
@@ -1329,7 +1329,7 @@ function Services() {
               <button
                 key={r.value}
                 onClick={() => setRadiusFilter(r.value)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all flex-shrink-0 whitespace-nowrap ${
                   radiusFilter === r.value
                     ? 'bg-stone-800 text-white'
                     : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
@@ -1454,7 +1454,7 @@ function Services() {
                       </div>
 
                       {/* Performance bands */}
-                      <div className="flex items-center justify-between pt-4 border-t border-[#e8e4d9]/50 text-xs">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-4 border-t border-[#e8e4d9]/50 text-xs">
                         <div className="flex gap-4 text-[#8c7866]">
                           <div>
                             <span className="block text-[10px] uppercase font-bold tracking-wider opacity-60">Experience</span>
@@ -1467,47 +1467,49 @@ function Services() {
                         </div>
 
                         {/* Booking & Direction Actions */}
-                        <div className="text-right flex items-center gap-2">
-                          <span className="font-black text-base mr-2" style={{ color: 'var(--terracotta)' }}>{p.price || '₹350/hr'}</span>
+                        <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2 pt-1 sm:pt-0">
+                          <span className="font-black text-base mr-1" style={{ color: 'var(--terracotta)' }}>{p.price || '₹350/hr'}</span>
                           
-                          {/* COMPARE BUTTON */}
-                          <Button
-                            size="small"
-                            onClick={() => toggleCompareService(p)}
-                            className={`!rounded-lg !font-semibold !px-3 !flex !items-center !gap-1 transition-all ${
-                              compareServices.some(s => s._id === p._id)
-                                ? '!bg-amber-100 !text-amber-800 !border-amber-300 font-bold'
-                                : '!bg-[#faf8f5] !text-[#5c5650] !border-[#e8e4d9]'
-                            }`}
-                          >
-                            {compareServices.some(s => s._id === p._id) ? '✓ Compared' : '⚖️ Compare'}
-                          </Button>
-
-                          {/* Map routing redirect */}
-                          <a 
-                            href={`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`}
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                          >
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            {/* COMPARE BUTTON */}
                             <Button
                               size="small"
-                              className="!rounded-lg !border-none !font-semibold !px-3 !flex !items-center !gap-1"
-                              style={{ background: '#f2efe8', color: '#5c5650' }}
+                              onClick={() => toggleCompareService(p)}
+                              className={`!rounded-lg !font-semibold !px-2.5 !text-xs !flex !items-center !gap-1 transition-all ${
+                                compareServices.some(s => s._id === p._id)
+                                  ? '!bg-amber-100 !text-amber-800 !border-amber-300 font-bold'
+                                  : '!bg-[#faf8f5] !text-[#5c5650] !border-[#e8e4d9]'
+                              }`}
                             >
-                              Route <CompassOutlined />
+                              {compareServices.some(s => s._id === p._id) ? '✓ Compared' : '⚖️ Compare'}
                             </Button>
-                          </a>
 
-                          <Link to={`/khoj-services/allServices/${serviceId}`}>
-                            <Button 
-                              type="primary" 
-                              size="small" 
-                              className="!rounded-lg !border-none !font-semibold !px-4"
-                              style={{ background: 'linear-gradient(135deg, var(--terracotta), var(--gold))', color: '#fff' }}
+                            {/* Map routing redirect */}
+                            <a 
+                              href={`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`}
+                              target="_blank" 
+                              rel="noopener noreferrer"
                             >
-                              Book Now
-                            </Button>
-                          </Link>
+                              <Button
+                                size="small"
+                                className="!rounded-lg !border-none !font-semibold !px-2.5 !text-xs !flex !items-center !gap-1"
+                                style={{ background: '#f2efe8', color: '#5c5650' }}
+                              >
+                                Route <CompassOutlined />
+                              </Button>
+                            </a>
+
+                            <Link to={`/khoj-services/allServices/${serviceId}`}>
+                              <Button 
+                                type="primary" 
+                                size="small" 
+                                className="!rounded-lg !border-none !font-semibold !px-3.5 !text-xs"
+                                style={{ background: 'linear-gradient(135deg, var(--terracotta), var(--gold))', color: '#fff' }}
+                              >
+                                Book Now
+                              </Button>
+                            </Link>
+                          </div>
                         </div>
                       </div>
                     </div>
